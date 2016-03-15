@@ -64,3 +64,4 @@ target/
 
 tajenv/
 taj/
+db.sqlite3
