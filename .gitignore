@@ -64,4 +64,7 @@ target/
 
 tajenv/
 taj/
+
+#possibly temporary
 db.sqlite3
+migrations/
