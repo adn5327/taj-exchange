@@ -30,9 +30,9 @@ class Order(models.Model):
 
 	def __str__(self):
 		if(self.bid):
-			return str(self.order_id)+': BID on ' + self.security+' - +str(self.amount)+' at '+str(self.price)'
+			return str(self.order_id)+': BID on ' + self.security+' - '+str(self.amount)+' at '+str(self.price)
 		else:
-			return str(self.order_id)+': ASK on ' + self.security+' - +str(self.amount)+' at '+str(self.price)'
+			return str(self.order_id)+': ASK on ' + self.security+' - '+str(self.amount)+' at '+str(self.price)
 class Account(models.Model):
 	name = models.CharField(max_length=20)
 	funds = models.IntegerField(default=0)
