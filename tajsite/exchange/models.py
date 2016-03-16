@@ -33,7 +33,7 @@ class Order(models.Model):
 class Account(models.Model):
 	name = models.CharField(max_length=20)
 	funds = models.IntegerField(default=0)
-	SSN = models.IntegerField(default=0)
+	SSN = models.IntegerField(primary_key=True,default=0)
 	account_num = models.IntegerField(default=0)
 	account_securities = models.ManyToManyField('Security', blank=True)
 	account_orders = models.ManyToManyField('Order', blank=True)
