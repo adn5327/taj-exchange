@@ -8,8 +8,8 @@ class Security(models.Model):
 	inner_bid = models.IntegerField(default=0)
 	inner_ask = models.IntegerField(default=0)
 	fmv = models.IntegerField(default=0)
-	orders = models.ManyToManyField(Order)
-	accounts = models.ManyToManyField(Account)
+	security_orders = models.ManyToManyField('Order')
+	security_accounts = models.ManyToManyField('Account')
 	#inner_bid, inner_ask, and fmv come from orders db
 
 	def __str__(self):
@@ -23,8 +23,8 @@ class Order(models.Model):
 	price = models.IntegerField(default=0)
 	amount = models.IntegerField(default=0)
 	order_id = models.IntegerField(primary_key=True,default=0)
-	security = models.ForeignKey(Security, on_delete=models.CASCADE)
-	account = models.ForeignKey(Account, on_delete=models.CASCADE)
+	order_security = models.ForeignKey('Security', on_delete=models.CASCADE)
+	order_account = models.ForeignKey('Account', on_delete=models.CASCADE)
 	#NEED  'TRADE' RELATIONSHIP WITH ORDER
 	#need to update order_type, order_id
 
@@ -38,8 +38,8 @@ class Account(models.Model):
 	funds = models.IntegerField(default=0)
 	SSN = models.IntegerField(primary_key=True,unique=False,default=0)
 	account_num = models.IntegerField(primary_key=True,unique=False,default=0)
-	securities = models.ManyToManyField(Security)
-	orders = models.ManyToManyField(Order)
+	account_securities = models.ManyToManyField('Security')
+	account_orders = models.ManyToManyField('Order')
 
 	def __str__(self):
 		return self.name			
