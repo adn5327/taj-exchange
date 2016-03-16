@@ -8,8 +8,8 @@ class Security(models.Model):
 	inner_bid = models.IntegerField(default=0)
 	inner_ask = models.IntegerField(default=0)
 	fmv = models.IntegerField(default=0)
-	security_orders = models.ManyToManyField('Order')
-	security_accounts = models.ManyToManyField('Account')
+	security_orders = models.ManyToManyField('Order', blank=True)
+	security_accounts = models.ManyToManyField('Account', blank=True)
 	#inner_bid, inner_ask, and fmv come from orders db
 
 	def __str__(self):
@@ -18,8 +18,7 @@ class Security(models.Model):
 class Order(models.Model):
 	start_time = models.DateTimeField('date started')
 	order_type = models.CharField(max_length=20)
-	bid = models.BooleanField(default=True)
-	ask = models.BooleanField(default=False)
+	bidask = models.CharField(max_length=3,choices=(('BID', 'BID'),('ASK', 'ASK')))
 	price = models.IntegerField(default=0)
 	amount = models.IntegerField(default=0)
 	order_id = models.IntegerField(primary_key=True,default=0)
@@ -29,17 +28,18 @@ class Order(models.Model):
 	#need to update order_type, order_id
 
 	def __str__(self):
-		if(self.bid):
-			return str(self.order_id)+': BID on ' + self.security+' - '+str(self.amount)+' at '+str(self.price)
-		else:
-			return str(self.order_id)+': ASK on ' + self.security+' - '+str(self.amount)+' at '+str(self.price)
+		return str(self.order_id)+': '+self.bidask+' on ' + self.order_security.symbol+' - '+str(self.amount)+' at '+str(self.price)
+		
 class Account(models.Model):
 	name = models.CharField(max_length=20)
 	funds = models.IntegerField(default=0)
-	SSN = models.IntegerField(primary_key=True,unique=False,default=0)
-	account_num = models.IntegerField(primary_key=True,unique=False,default=0)
-	account_securities = models.ManyToManyField('Security')
-	account_orders = models.ManyToManyField('Order')
+	SSN = models.IntegerField(default=0)
+	account_num = models.IntegerField(default=0)
+	account_securities = models.ManyToManyField('Security', blank=True)
+	account_orders = models.ManyToManyField('Order', blank=True)
 
 	def __str__(self):
-		return self.name			
+		return self.name
+
+	class Meta:
+		unique_together = (("SSN", "account_num"),)			
