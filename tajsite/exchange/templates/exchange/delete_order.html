@@ -1,0 +1,16 @@
+<!--DOCTYPE html -->
+<html>
+	<body>
+		{% if orders %}
+		<form action="{% url 'exchange:index' %}" method="POST">
+			{% csrf_token %}
+			{% for order in orders %}
+			<input type="radio" name="order" value="{{order.id}}"/>{{order}}<br>
+			{% endfor %}
+			<input type="submit" value="Delete Order"/>
+		</form>
+		{% else %}
+		<h2>No orders found</h2>
+		{% endif %}
+	</body>
+</html>

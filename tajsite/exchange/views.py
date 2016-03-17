@@ -51,10 +51,16 @@ def order_book(request):
 	return render(request, 'exchange/orderbook.html',context)
 
 
-def del_order_account_select(request):
-	accounts = Account.objects.all()
-	context={
-		'accounts':accounts
-	}
-	return render(request, 'exchange/account_select.html',context)
+def delete_order(request):
+	if request.method == 'POST':
+		order_id = request.POST.get('order')
+		order = Order.objects.get(id=order_id)
+		order.delete()
+		return render(request, 'exchange/index.html')
+	else:
+		orders = Order.objects.all()
+		context={
+			'orders':orders
+		}
+		return render(request, 'exchange/delete_order.html',context)
 
