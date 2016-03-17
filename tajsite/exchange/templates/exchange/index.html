@@ -1,16 +1,20 @@
 {% load staticfiles %}
 {% include "exchange/base.html" %}
+<body>
 
 
-<a href="{% url 'exchange:orderbookall' %}">Full orderbook</a>
-<br>
-<a href="{% url 'exchange:order' %}">Submit an order</a>
-<br>
-<a href="{% url 'exchange:deleteorder' %}">Delete an order</a>
-<br>
-<a href="{% url 'exchange:createaccount' %}">Create an account</a>
-<br>
-<a href="{% url 'exchange:updateaccount' %}">Update funds in an account</a>
-<br>
-<a href="{% url 'exchange:viewaccount' %}">View account statuses</a>
+<div class="container-fluid">
+    <a href="{% url 'exchange:createaccount' %}">Create an account</a>
+    <br>
+    <a href="{% url 'exchange:orderbookall' %}">Full orderbook</a>
+    <br>
+    <a href="{% url 'exchange:order' %}">Submit an order</a>
+    <br>
+    <a href="{% url 'exchange:deleteorder' %}">Delete an order</a>
+    <br>
+    <a href="{% url 'exchange:updateaccount' %}">Update funds in an account</a>
+    <br>
+    <a href="{% url 'exchange:viewaccount' %}">View account statuses</a>
+</div>
+</body>
 
