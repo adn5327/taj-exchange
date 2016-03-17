@@ -57,11 +57,12 @@ virtual environment
 
 4. Now that python is installed, we want to alias the python shell command to use Python 2.7.x
 add to ~/.bashrc:
-======================================
+
 	alias python="~/myVE/bin/Python2.7"
-======================================
+
 And then we must tell our shell to use this upadated .bashrc file:
-======================================	
+
+======================================
 	(myVE) $ source ~/.bashrc
 ======================================
 
