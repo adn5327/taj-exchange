@@ -1,4 +1,4 @@
-{% staticfiles %}
+{% load staticfiles %}
 {% include "exchange/base.html" %}
 
 <body>
@@ -8,12 +8,12 @@
             <div class="container">
                 <div class="col-sm-6">
                     {% for each_bid in value.bids %}
-                        {{each_bid}}
+                        <p>{{each_bid}}</p>
                     {% endfor %}
                 </div>
                 <div class="col-sm-6">
                     {% for each_ask in value.asks %}
-                        {{each_ask}}
+                        <p>{{each_ask}}</p>
                     {% endfor %}
                 </div>
 

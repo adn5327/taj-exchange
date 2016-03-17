@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 
 from .forms import OrderForm
-from .models import Order
+from .models import Order, Security, Account
 
 def index(request):
     return HttpResponse("Hello. Welcome to the Taj Exchange")
