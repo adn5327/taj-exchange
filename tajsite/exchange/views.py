@@ -3,7 +3,7 @@ from django.http import HttpResponse
 
 from django.utils import timezone
 
-from .forms import OrderForm
+from .forms import OrderForm, CreateAccountForm
 from .models import Order, Security, Account
 
 def index(request):
@@ -64,3 +64,26 @@ def delete_order(request):
 		}
 		return render(request, 'exchange/delete_order.html',context)
 
+def create_account(request):
+	if request.method == 'POST':
+		form = CreateAccountForm(request.POST)
+		if form.is_valid():
+			f = form.cleaned_data
+			a = Account(name=f['name'],
+				SSN = f['SSN'])
+			a.save()
+			context = {
+				'account':a
+			}
+		else:
+			context = {
+				'account':None
+			}
+		return render(request, 'exchange/create_account_submit.html', context)
+	else:
+		form = CreateAccountForm()
+		context = {
+			'form':form
+		}
+		return render(request, 'exchange/create_account.html', context)
+		

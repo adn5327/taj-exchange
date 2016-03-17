@@ -1,0 +1,11 @@
+{%load staticfiles%}
+{% include "exchange/base.html" %}
+
+<body>
+	{%if account%}
+	<h2>Account successfully created</h2>
+	<p>{{account}}</p>
+	{% else %}
+	<h2>Account creation failed</h2>
+	{% endif %}
+</body>
