@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 from django.utils import timezone
+from django.core.urlresolvers import reverse
 
-from .forms import OrderForm
+from .forms import OrderForm, UpdateAccountForm
 from .models import Order, Security, Account
 
 def index(request):
@@ -63,4 +64,19 @@ def delete_order(request):
 			'orders':orders
 		}
 		return render(request, 'exchange/delete_order.html',context)
+def update_account(request):
+   if request.method== 'POST':
+        form = UpdateAccountForm(request.POST)
+        if form.is_valid():
+            f = form.cleaned_data
+            cur_account = Account.objects.filter(id=f['order_account'])[0]
+            cur_funds = cur_account.funds
+            if cur_funds + f['funds'] >=0:
+                cur_account.funds = cur_funds + f['funds']
+                cur_account.save()                
+        return HttpResponseRedirect(reverse('exchange:index'))
+   else:
+        form = UpdateAccountForm()
+        context={'form':form}
+        return render(request, 'exchange/update_account.html',context) 
 
