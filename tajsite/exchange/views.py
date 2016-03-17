@@ -51,5 +51,10 @@ def order_book(request):
 	return render(request, 'exchange/orderbook.html',context)
 
 
-
+def del_order_account_select(request):
+	accounts = Account.objects.all()
+	context={
+		'accounts':accounts
+	}
+	return render(request, 'exchange/account_select.html',context)
 
