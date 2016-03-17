@@ -13,7 +13,13 @@ class OrderForm(forms.Form):
 	order_account = forms.ModelMultipleChoiceField(queryset=Account.objects.all())
 
 
+
 class CreateAccountForm(forms.Form):
 	name = forms.CharField(required=True)
 	SSN = forms.IntegerField(required=True)
 	
+
+class UpdateAccountForm(forms.Form):
+    order_account = forms.ModelMultipleChoiceField(queryset=Account.objects.all())
+    funds = forms.IntegerField(initial=0)
+

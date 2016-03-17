@@ -8,6 +8,11 @@ urlpatterns = [
     url(r'^order/submit/$', views.order, name='submit'),
     url(r'^orderbook/all/$', views.order_book, name='orderbookall'),
     url(r'^deleteorder/$', views.delete_order, name='deleteorder'),
+
     url(r'^account/create/', views.create_account, name='createaccount'),
     url(r'^account/create/submit', views.create_account, name='createaccountsubmit')
+
+    url(r'^account/update/$', views.update_account, name='updateaccount'),
+    url(r'^account/view/$', views.view_account, name='viewaccount'),
+
 ]
