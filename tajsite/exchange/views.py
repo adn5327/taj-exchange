@@ -57,8 +57,8 @@ def order_book(request):
 	book = {}
 	securities = Security.objects.all()
 	for sec in securities:
-		bids = Order.objects.filter(order_security=sec,bidask='BID')
-		asks = Order.objects.filter(order_security=sec,bidask='ASK')
+		bids = Order.objects.filter(order_security=sec,bidask='BID').order_by('-price')
+		asks = Order.objects.filter(order_security=sec,bidask='ASK').order_by('price')
 		book[sec.symbol] = {'bids':bids,'asks':asks}
 	context={
 		'book':book
