@@ -17,7 +17,7 @@ class Security(models.Model):
 
 class Order(models.Model):
 	start_time = models.DateTimeField('date started')
-	order_type = models.CharField(max_length=20)
+	order_type = models.CharField(max_length=20,choices=(('Fill or Kill','Fill or Kill'),))
 	bidask = models.CharField(max_length=3,choices=(('BID', 'BID'),('ASK', 'ASK')))
 	price = models.IntegerField(default=0)
 	amount = models.IntegerField(default=0)
