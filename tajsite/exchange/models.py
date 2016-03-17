@@ -27,7 +27,7 @@ class Order(models.Model):
 	#need to update order_type,
 
 	def __str__(self):
-		return str(self.id)+': '+self.bidask+' on ' + self.order_security.symbol+' - '+str(self.amount)+' at '+str(self.price)
+		return str(self.id)+': '+self.bidask+' on ' + str(self.order_security) +' : '+str(self.amount)+' at '+str(self.price)+ ' from ' + str(self.order_account)
 		
 class Account(models.Model):
 	name = models.CharField(max_length=20)
