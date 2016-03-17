@@ -1,0 +1,7 @@
+{% load staticfiles %}
+{% include "exchange/base.html" %}
+
+
+<a href="{% url 'exchange:orderbookall' %}">Full orderbook</a>
+<br>
+<a href="{% url 'exchange:order' %}">Submit an order</a>

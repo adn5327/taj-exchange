@@ -7,7 +7,7 @@ from .forms import OrderForm
 from .models import Order, Security, Account
 
 def index(request):
-    return HttpResponse("Hello. Welcome to the Taj Exchange")
+    return render(request, 'exchange/index.html' )
 
 def order(request):
 	if request.method == 'POST':

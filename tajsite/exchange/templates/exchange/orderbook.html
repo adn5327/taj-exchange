@@ -9,11 +9,15 @@
                 <div class="col-sm-6">
                     {% for each_bid in value.bids %}
                         <p>{{each_bid}}</p>
+                    {% empty %}
+                        <p>No orders!!</p>
                     {% endfor %}
                 </div>
                 <div class="col-sm-6">
                     {% for each_ask in value.asks %}
                         <p>{{each_ask}}</p>
+                    {% empty %}
+                        <p>No orders!!</p>
                     {% endfor %}
                 </div>
 
