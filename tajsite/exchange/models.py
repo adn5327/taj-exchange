@@ -24,10 +24,10 @@ class Order(models.Model):
 	order_security = models.ForeignKey('Security', on_delete=models.CASCADE)
 	order_account = models.ForeignKey('Account', on_delete=models.CASCADE)
 	#NEED  'TRADE' RELATIONSHIP WITH ORDER
-	#need to update order_type, order_id
+	#need to update order_type,
 
 	def __str__(self):
-		return str(self.order_id)+': '+self.bidask+' on ' + self.order_security.symbol+' - '+str(self.amount)+' at '+str(self.price)
+		return str(self.id)+': '+self.bidask+' on ' + self.order_security.symbol+' - '+str(self.amount)+' at '+str(self.price)
 		
 class Account(models.Model):
 	name = models.CharField(max_length=20)
