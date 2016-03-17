@@ -2,7 +2,7 @@
 <html>
 	<body>
 		{% if orders %}
-		<form action="{% url 'exchange:index' %}" method="POST">
+		<form action="/deleteorder/" method="POST">
 			{% csrf_token %}
 			{% for order in orders %}
 			<input type="radio" name="order" value="{{order.id}}"/>{{order}}<br>

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 
 from django.utils import timezone
@@ -56,8 +56,10 @@ def delete_order(request):
 	if request.method == 'POST':
 		order_id = request.POST.get('order')
 		order = Order.objects.get(id=order_id)
+		print order
 		order.delete()
-		return render(request, 'exchange/index.html')
+		#return render(request, 'exchange/delete_order.html')
+		return redirect('/')
 	else:
 		orders = Order.objects.all()
 		context={
