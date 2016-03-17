@@ -30,12 +30,26 @@ def order(request):
 			context = {
 				'order':None
 			}
-		return render(request, "order_submit.html", context)
+		return render(request, "exchange/order_submit.html", context)
 	else:
 		form = OrderForm()
 		context = {
 			'form':form
 		}
-		return render(request, 'order.html', context)
+		return render(request, 'exchange/order.html', context)
+
+def order_book(request):
+	book = {}
+	securities = Security.objects.all()
+	for sec in securities:
+		bids = Order.objects.filter(order_security=sec,bidask='BID')
+		asks = Order.objects.filter(order_security=sec,bidask='ASK')
+		book[sec.symbol] = {'bids':bids,'asks':asks}
+	context={
+		'book':book
+	}
+	return render(request, 'exchange/orderbook.html',context)
+
+
 
 
