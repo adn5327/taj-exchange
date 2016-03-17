@@ -28,17 +28,18 @@ class Order(models.Model):
 
 	def __str__(self):
 		return str(self.id)+': '+self.bidask+' on ' + str(self.order_security) +' : '+str(self.amount)+' at '+str(self.price)+ ' from ' + str(self.order_account)
-		
+
 class Account(models.Model):
 	name = models.CharField(max_length=20)
 	funds = models.IntegerField(default=0)
-	SSN = models.IntegerField(primary_key=True,default=0)
-	account_num = models.IntegerField(default=0)
+	SSN = models.IntegerField(default=0)
+#	account_num = models.IntegerField(default=0)
+#	account_num = models.AutoField(primary_key=True)
 	account_securities = models.ManyToManyField('Security', blank=True)
 	account_orders = models.ManyToManyField('Order', blank=True)
 
 	def __str__(self):
 		return self.name
 
-	class Meta:
-		unique_together = (("SSN", "account_num"),)			
+#	class Meta:
+#		unique_together = (("SSN", "account_num"),)

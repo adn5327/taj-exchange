@@ -11,3 +11,5 @@ class OrderForm(forms.Form):
 	amount = forms.IntegerField(initial=0)
 	order_security = forms.ModelMultipleChoiceField(queryset=Security.objects.all())
 	order_account = forms.ModelMultipleChoiceField(queryset=Account.objects.all())
+
+
