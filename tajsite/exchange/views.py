@@ -81,4 +81,7 @@ def update_account(request):
         form = UpdateAccountForm()
         context={'form':form}
         return render(request, 'exchange/update_account.html',context) 
-
+def view_account(request):
+    all_accounts = Account.objects.all()
+    context = {'accounts':all_accounts}
+    return render(request, 'exchange/view_account.html',context) 

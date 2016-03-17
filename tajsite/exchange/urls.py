@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^orderbook/all/$', views.order_book, name='orderbookall'),
     url(r'^deleteorder/$', views.delete_order, name='deleteorder'),
     url(r'^account/update/$', views.update_account, name='updateaccount'),
+    url(r'^account/view/$', views.view_account, name='viewaccount'),
 ]
