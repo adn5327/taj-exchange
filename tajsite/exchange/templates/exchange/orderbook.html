@@ -1,0 +1,24 @@
+{% staticfiles %}
+{% include "exchange/base.html" %}
+
+<body>
+    {% if book %}
+        {% for key,value in book.items %} 
+            <h3>{{key}}</h3>
+            <div class="container">
+                <div class="col-sm-6">
+                    {% for each_bid in value.bids %}
+                        {{each_bid}}
+                    {% endfor %}
+                </div>
+                <div class="col-sm-6">
+                    {% for each_ask in value.asks %}
+                        {{each_ask}}
+                    {% endfor %}
+                </div>
+
+            </div> 
+        {% endfor %}
+    {% endif %}
+</body>
+
