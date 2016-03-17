@@ -41,5 +41,5 @@ class Account(models.Model):
 	def __str__(self):
 		return self.name
 
-#	class Meta:
-#		unique_together = (("SSN", "account_num"),)
+	class Meta:
+		unique_together = (("SSN", "id"))
