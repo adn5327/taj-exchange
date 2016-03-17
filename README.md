@@ -18,13 +18,13 @@
 
 ##Getting Virtualenv
 
-	1. Download and extract the virtualenv python module
+1. Download and extract the virtualenv python module
 ```
 	$ curl -O https://pypi.python.org/packages/source/v/virtualenv/virtualenv-15.0.0.tar.gz
 	$ tar xvfz virtualenv-15.0.0.tar.gz
 	$ cd virtualenv-15.0.0
 ```
-	2. Now we create a virtual environemnt 'myVE'
+2. Now we create a virtual environemnt 'myVE'
 ```
 	$ python virtualenv.py ~/myVE
 ```
