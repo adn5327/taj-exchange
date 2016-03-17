@@ -27,8 +27,6 @@ def order(request):
 			o.save()
 			ask_orders = Order.objects.filter(order_security=o.order_security,bidask='ASK').order_by('price')
 			bid_orders = Order.objects.filter(order_security=o.order_security,bidask='BID').order_by('-price')
-			print ask_orders
-			print bid_orders
 			o.order_security.inner_ask = ask_orders[0].price
 			o.order_security.inner_bid = bid_orders[0].price
 			o.order_security.save()
@@ -63,10 +61,13 @@ def order_book(request):
 def delete_order(request):
 	if request.method == 'POST':
 		order_id = request.POST.get('order')
-		order = Order.objects.get(id=order_id)
-		print order
-		order.delete()
-		#return render(request, 'exchange/delete_order.html')
+		o = Order.objects.get(id=order_id)
+		o.delete()
+		ask_orders = Order.objects.filter(order_security=o.order_security,bidask='ASK').order_by('price')
+		bid_orders = Order.objects.filter(order_security=o.order_security,bidask='BID').order_by('-price')
+		o.order_security.inner_ask = ask_orders[0].price
+		o.order_security.inner_bid = bid_orders[0].price
+		o.order_security.save()
 		return redirect('/')
 	else:
 		orders = Order.objects.all()
