@@ -21,7 +21,6 @@ class Order(models.Model):
 	bidask = models.CharField(max_length=3,choices=(('BID', 'BID'),('ASK', 'ASK')))
 	price = models.IntegerField(default=0)
 	amount = models.IntegerField(default=0)
-	order_id = models.IntegerField(primary_key=True,default=0)
 	order_security = models.ForeignKey('Security', on_delete=models.CASCADE)
 	order_account = models.ForeignKey('Account', on_delete=models.CASCADE)
 	#NEED  'TRADE' RELATIONSHIP WITH ORDER
