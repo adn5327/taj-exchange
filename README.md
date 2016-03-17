@@ -7,7 +7,7 @@
     - currently host is web.engr.illinois.edu
 
 
-# Getting Started
+## Getting Started
 
 
 1. Get virtualenv
@@ -16,22 +16,22 @@
 4. Install django
 
 
-#Getting Virtualenv
+##Getting Virtualenv
 
 	1. Download and extract the virtualenv python module
-======================================
+```
 	$ curl -O https://pypi.python.org/packages/source/v/virtualenv/virtualenv-15.0.0.tar.gz
 	$ tar xvfz virtualenv-15.0.0.tar.gz
 	$ cd virtualenv-15.0.0
-======================================
+```
 	2. Now we create a virtual environemnt 'myVE'
-======================================
+```
 	$ python virtualenv.py ~/myVE
-======================================
+```
 This creates a directory ~/myVE and sets up a virtual environment
 
 
-#Updating python 	
+##Updating python 	
 
 Because we do not have root permissions on this server,
 we must compile Python 2.7.x into our virtual environment.
@@ -66,7 +66,7 @@ And then we must tell our shell to use this upadated .bashrc file:
 	(myVE) $ source ~/.bashrc
 ======================================
 
-#Install pip for python 2.7.x
+##Install pip for python 2.7.x
 
 The version of pip that is installed with virtualenv is dependent
 on the Python version you are using. To install pip2.7 we must do the following:
@@ -102,7 +102,7 @@ You should see something like:
 	pip 8.1.0 ~/myVE/lib/python2.7/site-packages/pip-8.1.0-py2.7.egg (python 2.7)
 ======================================
 
-#Install Django
+##Install Django
 
 Now that we have pip that runs on python 2.7, installing dependencies (such as Django) is as easy as:
 ======================================
