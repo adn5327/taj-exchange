@@ -39,7 +39,8 @@ class Account(models.Model):
 	account_orders = models.ManyToManyField('Order', blank=True)
 
 	def __str__(self):
+		return self.name
+	def print_funds(self):
 		return self.name + ' has ' + str(self.funds)
-
 	class Meta:
 		unique_together = (("SSN", "id"))

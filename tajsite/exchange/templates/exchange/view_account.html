@@ -2,5 +2,5 @@
 {% include "exchange/base.html" %}
 
 {% for each_account in accounts %}
-    <p>{{each_account}}</p>
+    <p>{{each_account.print_funds}}</p>
 {% endfor %}
