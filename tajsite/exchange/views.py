@@ -25,6 +25,19 @@ def order(request):
 				order_security=f['order_security'][0],
 				order_account=f['order_account'][0])
 			o.save()
+			ask_orders = Order.objects.filter(order_security=o.order_security,bidask='ASK').order_by('price')
+			bid_orders = Order.objects.filter(order_security=o.order_security,bidask='BID').order_by('-price')
+			print ask_orders
+			print bid_orders
+			if o.bidask == 'ASK' and o.price < ask_orders[0].price:
+				o.order_security.inner_ask = ask_orders[0].price
+			elif o.bidask == 'ASK':
+				o.order_security.inner_ask = o.price
+			if o.bidask == 'BID' and o.price > bid_orders[0].price:
+				o.order_security.inner_bid = bid_orders[0].price
+			elif o.bidask == 'BID':
+				o.order_security.inner_bid = bid_orders[0].price
+			o.order_security.save()
 			context = {
 				'order':o,
 			}
