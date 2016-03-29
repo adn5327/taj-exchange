@@ -8,6 +8,8 @@ from .forms import OrderForm, CreateAccountForm, UpdateAccountForm
 
 from .models import Order, Security, Account
 
+from .func import setInners
+
 def index(request):
     return render(request, 'exchange/index.html' )
 
@@ -25,19 +27,7 @@ def order(request):
 				order_security=f['order_security'][0],
 				order_account=f['order_account'][0])
 			o.save()
-			ask_orders = Order.objects.filter(order_security=o.order_security,bidask='ASK').order_by('price')
-			bid_orders = Order.objects.filter(order_security=o.order_security,bidask='BID').order_by('-price')
-			print ask_orders
-			print bid_orders
-			if o.bidask == 'ASK' and o.price < ask_orders[0].price:
-				o.order_security.inner_ask = ask_orders[0].price
-			elif o.bidask == 'ASK':
-				o.order_security.inner_ask = o.price
-			if o.bidask == 'BID' and o.price > bid_orders[0].price:
-				o.order_security.inner_bid = bid_orders[0].price
-			elif o.bidask == 'BID':
-				o.order_security.inner_bid = bid_orders[0].price
-			o.order_security.save()
+			setInners(o.order_security)
 			context = {
 				'order':o,
 			}
@@ -52,6 +42,7 @@ def order(request):
 			'form':form
 		}
 		return render(request, 'exchange/order.html', context)
+
 
 def order_book(request):
 	book = {}
@@ -70,8 +61,8 @@ def delete_order(request):
 	if request.method == 'POST':
 		order_id = request.POST.get('order')
 		order = Order.objects.get(id=order_id)
-		print order
 		order.delete()
+		setInners(order.order_security)
 		#return render(request, 'exchange/delete_order.html')
 		return redirect('/')
 	else:

@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+from django.contrib.auth.models import User
+
 class Security(models.Model):
 	symbol = models.CharField(primary_key=True,max_length=5)
 	volume = models.IntegerField(default=0)
@@ -30,6 +32,7 @@ class Order(models.Model):
 		return str(self.id)+': '+self.bidask+' on ' + str(self.order_security) +' : '+str(self.amount)+' at '+str(self.price)+ ' from ' + str(self.order_account)
 
 class Account(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	name = models.CharField(max_length=20)
 	funds = models.IntegerField(default=0)
 	SSN = models.IntegerField(default=0)
