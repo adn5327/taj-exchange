@@ -63,7 +63,6 @@ def delete_order(request):
 		order = Order.objects.get(id=order_id)
 		order.delete()
 		setInners(order.order_security)
-		#return render(request, 'exchange/delete_order.html')
 		return redirect('/')
 	else:
 		orders = Order.objects.all()
