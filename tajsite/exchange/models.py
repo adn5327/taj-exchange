@@ -32,7 +32,7 @@ class Order(models.Model):
 		return str(self.id)+': '+self.bidask+' on ' + str(self.order_security) +' : '+str(self.amount)+' at '+str(self.price)+ ' from ' + str(self.order_account)
 
 class Account(models.Model):
-	#user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	name = models.CharField(max_length=20)
 	funds = models.IntegerField(default=0)
 	SSN = models.IntegerField(default=0)
