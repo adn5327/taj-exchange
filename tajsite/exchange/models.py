@@ -33,7 +33,6 @@ class Order(models.Model):
 
 class Account(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	name = models.CharField(max_length=20)
 	funds = models.IntegerField(default=0)
 	SSN = models.IntegerField(default=0)
 #	account_num = models.IntegerField(default=0)
@@ -42,7 +41,7 @@ class Account(models.Model):
 	account_orders = models.ManyToManyField('Order', blank=True)
 
 	def __str__(self):
-		return self.name
+		return self.user.username
 	def print_funds(self):
 		return self.name + ' has ' + str(self.funds)
 	class Meta:

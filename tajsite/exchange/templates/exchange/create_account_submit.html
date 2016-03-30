@@ -7,5 +7,8 @@
 	<p>{{account}}</p>
 	{% else %}
 	<h2>Account creation failed</h2>
+	<script>
+		alert("{{err}}");
+	</script>
 	{% endif %}
 </body>
