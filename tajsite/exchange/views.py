@@ -29,13 +29,14 @@ def order(request):
 		if form.is_valid():
 			f = form.cleaned_data
 			start_time = timezone.now()
+			account = Account.objects.get(user=request.user)
 			o = Order(start_time=start_time,
 				order_type=f['order_type'],
 				bidask=f['bidask'],
 				price=f['price'],
 				amount=f['amount'],
 				order_security=f['order_security'][0],
-				order_account=f['order_account'][0])
+				order_account=account)
 			o.save()
 			setInners(o.order_security)
 			context = {
@@ -49,7 +50,8 @@ def order(request):
 	else:
 		form = OrderForm()
 		context = {
-			'form':form
+			'form':form,
+			'user':request.user
 		}
 		return render(request, 'exchange/order.html', context)
 
@@ -62,7 +64,8 @@ def order_book(request):
 		asks = Order.objects.filter(order_security=sec,bidask='ASK').order_by('price')
 		book[sec.symbol] = {'bids':bids,'asks':asks}
 	context={
-		'book':book
+		'book':book,
+		'user':request.user
 	}
 	return render(request, 'exchange/orderbook.html',context)
 
@@ -75,7 +78,8 @@ def delete_order(request):
 		setInners(order.order_security)
 		return redirect('/')
 	else:
-		orders = Order.objects.all()
+		account = Account.objects.get(user=request.user)
+		orders = Order.objects.filter(order_account=account)
 		context={
 			'orders':orders
 		}
@@ -96,6 +100,8 @@ def create_account(request):
 				u.save()
 				a = Account(user=u,SSN=f['SSN'])
 				a.save()
+				user = authenticate(username=f['username'],password=f['password'])
+				login(request,user)
 				context = {
 					'account':a,
 					'errors':None
@@ -139,14 +145,14 @@ def login_page(request):
 
 def logout_page(request):
 	logout(request)
-	return render(request, 'exchange/logout_page.html')
+	return HttpResponseRedirect(reverse('exchange:index'))
 
 def update_account(request):
 	if request.method == 'POST':
 		form = UpdateAccountForm(request.POST)
 		if form.is_valid():
 			f = form.cleaned_data
-			cur_account = Account.objects.filter(id=f['order_account'])[0]
+			cur_account = Account.objects.get(user=request.user)
 			cur_funds = cur_account.funds
 			if cur_funds + f['funds'] >=0:
 				cur_account.funds = cur_funds + f['funds']
@@ -154,12 +160,25 @@ def update_account(request):
 		return HttpResponseRedirect(reverse('exchange:index'))
 	else:
 		form = UpdateAccountForm()
-		context={'form':form}
+		context={
+			'form':form,
+			'user':request.user
+		}
 		return render(request, 'exchange/update_account.html',context) 
 
 
 def view_account(request):
-	all_accounts = Account.objects.all()
-	context = {'accounts':all_accounts}
+	if request.user.is_authenticated():
+		account = Account.objects.get(user=request.user)
+		orders = Order.objects.filter(order_account=account)
+		context = {
+			'account':account,
+			'orders':orders,
+			'user':request.user
+		}
+	else:
+		context = {
+			'user':request.user
+		}
 	return render(request, 'exchange/view_account.html',context) 
 

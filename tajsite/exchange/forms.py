@@ -10,7 +10,7 @@ class OrderForm(forms.Form):
 	price = forms.IntegerField(initial=0)
 	amount = forms.IntegerField(initial=0)
 	order_security = forms.ModelMultipleChoiceField(queryset=Security.objects.all())
-	order_account = forms.ModelMultipleChoiceField(queryset=Account.objects.all())
+	#order_account = forms.ModelMultipleChoiceField(queryset=Account.objects.all())
 
 
 
@@ -29,6 +29,6 @@ class LoginAccountForm(forms.Form):
 
 
 class UpdateAccountForm(forms.Form):
-    order_account = forms.ModelMultipleChoiceField(queryset=Account.objects.all())
+    #order_account = forms.ModelMultipleChoiceField(queryset=Account.objects.all())
     funds = forms.IntegerField(initial=0)
 

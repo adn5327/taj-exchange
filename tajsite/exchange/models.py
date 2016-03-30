@@ -29,7 +29,7 @@ class Order(models.Model):
 	#need to update order_type,
 
 	def __str__(self):
-		return str(self.id)+': '+self.bidask+' on ' + str(self.order_security) +' : '+str(self.amount)+' at '+str(self.price)+ ' from ' + str(self.order_account)
+		return str(self.id)+': '+self.bidask+' on ' + str(self.order_security) +' : '+str(self.amount)+' at '+str(self.price)
 
 class Account(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -43,6 +43,6 @@ class Account(models.Model):
 	def __str__(self):
 		return self.user.username
 	def print_funds(self):
-		return self.name + ' has ' + str(self.funds)
+		return self.user.username + ' has ' + str(self.funds)
 	class Meta:
 		unique_together = (("SSN", "id"))
