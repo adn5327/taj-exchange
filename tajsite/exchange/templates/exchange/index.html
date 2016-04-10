@@ -5,7 +5,7 @@
 
 <div class="container-fluid">
     <a href="{% url 'exchange:orderbookall' %}">Full orderbook</a>
-    {% if user %}
+    {% if user.is_authenticated %}
     <br>
     <a href="{% url 'exchange:order' %}">Submit an order</a>
     <br>
@@ -19,12 +19,6 @@
     <a href="{% url 'admin:index' %}">Admin Home</a>
     <br>
     {% endif %}
-    <br><br><br>
-    <p>Logged in as {{user.username}}</p>
-    <a href="{% url 'exchange:logout' %}">Log out</a>
-    {% else %}
-    <br><br><br>
-    <p><a href="{% url 'exchange:login' %}">Log in</a> | <a href="{% url 'exchange:createaccount' %}">Create an account</a></p>
     {% endif %}
 </div>
 </body>

@@ -5,7 +5,8 @@
 	{% if user.is_authenticated %}
 	<div>
 		<h2>Your Account funds</h2>
-		<p>{{account.print_funds}}</p>
+		<p>{{account.print_funds_avail}}</p>
+		<p>{{account.print_funds_tot}}</p>
 		<br>
 	</div>
 	<div>

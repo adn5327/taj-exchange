@@ -19,7 +19,7 @@ class Security(models.Model):
 
 class Order(models.Model):
 	start_time = models.DateTimeField('date started')
-	order_type = models.CharField(max_length=20,choices=(('Fill or Kill','Fill or Kill'),))
+	order_type = models.CharField(max_length=20,choices=(('Limit','Limit'),))
 	bidask = models.CharField(max_length=3,choices=(('BID', 'BID'),('ASK', 'ASK')))
 	price = models.IntegerField(default=0)
 	amount = models.IntegerField(default=0)
@@ -33,16 +33,17 @@ class Order(models.Model):
 
 class Account(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	funds = models.IntegerField(default=0)
+	total_funds = models.IntegerField(default=0)
+	available_funds = models.IntegerField(default=0)
 	SSN = models.IntegerField(default=0)
-#	account_num = models.IntegerField(default=0)
-#	account_num = models.AutoField(primary_key=True)
 	account_securities = models.ManyToManyField('Security', blank=True)
 	account_orders = models.ManyToManyField('Order', blank=True)
 
 	def __str__(self):
 		return self.user.username
-	def print_funds(self):
-		return self.user.username + ' has ' + str(self.funds)
+	def print_funds_avail(self):
+		return 'Available Funds: ' + str(self.available_funds)
+	def print_funds_tot(self):
+		return 'Total Funds: ' + str(self.total_funds)
 	class Meta:
 		unique_together = (("SSN", "id"))

@@ -3,18 +3,49 @@
 <link rel="stylesheet" type="text/css" href="{% static 'exchange/css/bootstrap.min.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'exchange/css/custom.css' %}"/>
 <head>
+<link rel="shortcut icon" href="{% static 'exchange/images/favicon.ico' %}" sizes="256x256">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
-        <a class="navbar-brand" href="{% url 'exchange:index'%}">TAJ Exchange</a> 
+        <!--<a class="navbar-brand" href="{% url 'exchange:index'%}">TAJ Exchange</a>-->
+        <a class="navbar-brand">TAJ Exchange</a>
+        <ul class="nav navbar-nav">
+            <li><a href="{% url 'exchange:orderbookall' %}">Full orderbook</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'exchange:order' %}">Submit an order</a></li>
+            <li><a href="{% url 'exchange:deleteorder' %}">Delete an order</a></li>
+            <li><a href="{% url 'exchange:updateaccount' %}">Deposit/Withdraw</a></li>
+            <li><a href="{% url 'exchange:viewaccount' %}">View account</a></li>
+            {% if user.is_superuser %}
+            <li><a href="{% url 'admin:index' %}">Admin</a></li>
+            {% endif %}
+            {% endif %}
+        </ul>
     </div>
     <div class="collapse navbar-collapse">
-        {% if user %}
+        {% if user.is_authenticated %}
+        <a href="{% url 'exchange:logout' %}" class="btn btn-default navbar-btn pull-right" role="button">Log out</a>
         <p class="navbar-text pull-right">Logged in as {{user.username}}</p>
         {% else %}
-        <a href="{% url 'exchange:login' %}" class="btn btn-default navbar-btn pull-right" role="button">Sign in</a>  
+        <a href="{% url 'exchange:login' %}" class="btn btn-default navbar-btn pull-right" role="button">Sign in</a>
+        <a href="{% url 'exchange:createaccount' %}" class="btn btn-default navbar-btn pull-right" role="button">Create Account</a>  
         {% endif %}
-    </div
+    </div>
   </div>
 </nav>
+<script type="text/javascript">
+    console.log("Maybe?");
+    $(".nav a").on("click", function(){
+        console.log("yes");
+       $(".nav").find(".active").removeClass("active");
+       $(this).parent().addClass("active");
+    });
+    var loc = window.location.href;
+    $(".nav a").each(function() {
+      if (loc.match((this).href)) { 
+        $(this).parent().addClass("active"); 
+        }
+   });
+</script>
 </head>
