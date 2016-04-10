@@ -68,3 +68,5 @@ taj/
 #possibly temporary
 *.swp
 db.sqlite3
+
+.DS_STORE
