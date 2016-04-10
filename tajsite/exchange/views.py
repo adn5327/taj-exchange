@@ -4,14 +4,24 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 
-from .forms import OrderForm, CreateAccountForm, UpdateAccountForm
+from .forms import OrderForm, CreateAccountForm, UpdateAccountForm, LoginAccountForm
 
 from .models import Order, Security, Account
+
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 
 from .func import setInners
 
 def index(request):
-    return render(request, 'exchange/index.html' )
+	if request.user.is_authenticated():
+		user = request.user
+	else:
+		user = None
+	context = {
+		'user':user
+	}
+	return render(request, 'exchange/index.html', context)
 
 def order(request):
 	if request.method == 'POST':
@@ -19,13 +29,14 @@ def order(request):
 		if form.is_valid():
 			f = form.cleaned_data
 			start_time = timezone.now()
+			account = Account.objects.get(user=request.user)
 			o = Order(start_time=start_time,
 				order_type=f['order_type'],
 				bidask=f['bidask'],
 				price=f['price'],
 				amount=f['amount'],
 				order_security=f['order_security'][0],
-				order_account=f['order_account'][0])
+				order_account=account)
 			o.save()
 			setInners(o.order_security)
 			context = {
@@ -39,7 +50,8 @@ def order(request):
 	else:
 		form = OrderForm()
 		context = {
-			'form':form
+			'form':form,
+			'user':request.user
 		}
 		return render(request, 'exchange/order.html', context)
 
@@ -52,7 +64,8 @@ def order_book(request):
 		asks = Order.objects.filter(order_security=sec,bidask='ASK').order_by('price')
 		book[sec.symbol] = {'bids':bids,'asks':asks}
 	context={
-		'book':book
+		'book':book,
+		'user':request.user
 	}
 	return render(request, 'exchange/orderbook.html',context)
 
@@ -65,7 +78,8 @@ def delete_order(request):
 		setInners(order.order_security)
 		return redirect('/')
 	else:
-		orders = Order.objects.all()
+		account = Account.objects.get(user=request.user)
+		orders = Order.objects.filter(order_account=account)
 		context={
 			'orders':orders
 		}
@@ -77,15 +91,32 @@ def create_account(request):
 		form = CreateAccountForm(request.POST)
 		if form.is_valid():
 			f = form.cleaned_data
-			a = Account(name=f['name'],
-				SSN = f['SSN'])
-			a.save()
-			context = {
-				'account':a
-			}
+			if f['password'] == f['password_confirm']:
+				u = User.objects.create_user(username=f['username'],
+					password=f['password'],
+					email=f['email'])
+				u.first_name = f['first_name']
+				u.last_name = f['last_name']
+				u.save()
+				a = Account(user=u,SSN=f['SSN'])
+				a.save()
+				user = authenticate(username=f['username'],password=f['password'])
+				login(request,user)
+				context = {
+					'account':a,
+					'errors':None
+				}
+			else:
+				err = 'Passwords didn\'t match'
+				context = {
+					'account':None,
+					'errors':err
+				}
 		else:
+			err = 'Invalid form entry'
 			context = {
-				'account':None
+				'account':None,
+				'errors':err
 			}
 		return render(request, 'exchange/create_account_submit.html', context)
 	else:
@@ -94,25 +125,60 @@ def create_account(request):
 			'form':form
 		}
 		return render(request, 'exchange/create_account.html', context)
-		
+
+def login_page(request):
+	if request.method == 'POST':
+		form = LoginAccountForm(request.POST)
+		if form.is_valid():
+			f = form.cleaned_data
+			username = f['username']
+			password = f['password']
+			user = authenticate(username=username,password=password) 
+			if user is not None and user.is_active:
+				login(request, user)
+				print "success"
+		return HttpResponseRedirect(reverse('exchange:index'))
+	else:
+		form = LoginAccountForm()
+		context={'form':form}
+		return render(request, 'exchange/login_page.html',context)
+
+def logout_page(request):
+	logout(request)
+	return HttpResponseRedirect(reverse('exchange:index'))
 
 def update_account(request):
-   if request.method== 'POST':
-        form = UpdateAccountForm(request.POST)
-        if form.is_valid():
-            f = form.cleaned_data
-            cur_account = Account.objects.filter(id=f['order_account'])[0]
-            cur_funds = cur_account.funds
-            if cur_funds + f['funds'] >=0:
-                cur_account.funds = cur_funds + f['funds']
-                cur_account.save()                
-        return HttpResponseRedirect(reverse('exchange:index'))
-   else:
-        form = UpdateAccountForm()
-        context={'form':form}
-        return render(request, 'exchange/update_account.html',context) 
+	if request.method == 'POST':
+		form = UpdateAccountForm(request.POST)
+		if form.is_valid():
+			f = form.cleaned_data
+			cur_account = Account.objects.get(user=request.user)
+			cur_funds = cur_account.funds
+			if cur_funds + f['funds'] >=0:
+				cur_account.funds = cur_funds + f['funds']
+				cur_account.save()                
+		return HttpResponseRedirect(reverse('exchange:index'))
+	else:
+		form = UpdateAccountForm()
+		context={
+			'form':form,
+			'user':request.user
+		}
+		return render(request, 'exchange/update_account.html',context) 
+
+
 def view_account(request):
-    all_accounts = Account.objects.all()
-    context = {'accounts':all_accounts}
-    return render(request, 'exchange/view_account.html',context) 
+	if request.user.is_authenticated():
+		account = Account.objects.get(user=request.user)
+		orders = Order.objects.filter(order_account=account)
+		context = {
+			'account':account,
+			'orders':orders,
+			'user':request.user
+		}
+	else:
+		context = {
+			'user':request.user
+		}
+	return render(request, 'exchange/view_account.html',context) 
 

@@ -4,10 +4,17 @@
 <link rel="stylesheet" type="text/css" href="{% static 'exchange/css/custom.css' %}"/>
 <head>
 <nav class="navbar navbar-default navbar-fixed-top">
-  <div class="container">
+  <div class="container-fluid">
     <div class="navbar-header">
-        <a class="navbar-brand" href="{% url 'exchange:index'%}">Home</a> 
+        <a class="navbar-brand" href="{% url 'exchange:index'%}">TAJ Exchange</a> 
     </div>
+    <div class="collapse navbar-collapse">
+        {% if user %}
+        <p class="navbar-text pull-right">Logged in as {{user.username}}</p>
+        {% else %}
+        <a href="{% url 'exchange:login' %}" class="btn btn-default navbar-btn pull-right" role="button">Sign in</a>  
+        {% endif %}
+    </div
   </div>
 </nav>
 </head>

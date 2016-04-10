@@ -8,14 +8,22 @@
             <div class="container">
                 <div class="col-sm-6">
                     {% for each_bid in value.bids %}
+                        {% if each_bid.order_account.user == user %}
+                        <p style="color:#FF0000">{{each_bid}}</p>
+                        {% else%}
                         <p>{{each_bid}}</p>
+                        {% endif %}
                     {% empty %}
                         <p>No orders!!</p>
                     {% endfor %}
                 </div>
                 <div class="col-sm-6">
                     {% for each_ask in value.asks %}
+                        {% if each_ask.order_account.user == user %}
+                        <p style="color:#FF0000">{{each_ask}}</p>
+                        {% else%}
                         <p>{{each_ask}}</p>
+                        {% endif %}
                     {% empty %}
                         <p>No orders!!</p>
                     {% endfor %}

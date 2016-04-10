@@ -11,6 +11,9 @@ urlpatterns = [
 
     url(r'^account/create/', views.create_account, name='createaccount'),
     url(r'^account/create/submit', views.create_account, name='createaccountsubmit'),
+    url(r'^account/login/', views.login_page, name='login'),
+    url(r'^account/login/submit', views.login_page, name='loginsubmit'),
+    url(r'^account/logout', views.logout_page, name='logout'),
 
     url(r'^account/update/$', views.update_account, name='updateaccount'),
     url(r'^account/view/$', views.view_account, name='viewaccount'),

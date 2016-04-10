@@ -10,16 +10,25 @@ class OrderForm(forms.Form):
 	price = forms.IntegerField(initial=0)
 	amount = forms.IntegerField(initial=0)
 	order_security = forms.ModelMultipleChoiceField(queryset=Security.objects.all())
-	order_account = forms.ModelMultipleChoiceField(queryset=Account.objects.all())
+	#order_account = forms.ModelMultipleChoiceField(queryset=Account.objects.all())
 
 
 
 class CreateAccountForm(forms.Form):
-	name = forms.CharField(required=True)
+	username = forms.CharField(required=True)
+	email = forms.EmailField(required=True)
+	first_name = forms.CharField(required=True)
+	last_name = forms.CharField(required=True)
 	SSN = forms.IntegerField(required=True)
-	
+	password = forms.CharField(required=True, widget=forms.PasswordInput())
+	password_confirm = forms.CharField(required=True, widget=forms.PasswordInput())
+
+class LoginAccountForm(forms.Form):
+	username = forms.CharField(required=True)
+	password = forms.CharField(required=True, widget=forms.PasswordInput())
+
 
 class UpdateAccountForm(forms.Form):
-    order_account = forms.ModelMultipleChoiceField(queryset=Account.objects.all())
+    #order_account = forms.ModelMultipleChoiceField(queryset=Account.objects.all())
     funds = forms.IntegerField(initial=0)
 

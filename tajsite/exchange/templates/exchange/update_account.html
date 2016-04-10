@@ -2,12 +2,18 @@
 {% include "exchange/base.html" %}
 
 <body>
+	{% if user.is_authenticated %}
     <h2> Account form </h2>
     <form action="/account/update/" method="post">
     {% csrf_token %}
     {{form.as_p}}
     <button class="btn btn-primary" value="Submit"/>Submit</button>    
     </form>
+    {% else %}
+	<h2>Not logged in</h2>
+	<br><br>
+	<p><a href="{% url 'exchange:login' %}">Log in</a> | <a href="{% url 'exchange:createaccount' %}">Create an account</a></p>    	
+	{% endif %}
 
     
 <body>
