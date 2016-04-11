@@ -9,7 +9,7 @@
 			{% for order in orders %}
 			<input type="radio" name="order" value="{{order.id}}"/>{{order}}<br>
 			{% endfor %}
-			<input type="submit" value="Delete Order"/>
+			<button class="btn btn-primary" value="Delete Order"/>Delete Order</button>
 		</form>
 		{% else %}
 		<h2>No orders found</h2>

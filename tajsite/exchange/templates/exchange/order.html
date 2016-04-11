@@ -7,7 +7,7 @@
 		<form action="/order/submit/" method="post">
 		{% csrf_token %}
 		{{form.as_p}}
-		<input type="submit" value="Submit"/>
+		<button class="btn btn-primary"/>Submit</button>
 		</form>
 		{% else %}
 		<h2>Not logged in</h2>

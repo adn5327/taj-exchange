@@ -2,5 +2,13 @@ body {
     padding-top: 70px; 
     padding-left: 70px;
 }
-
-
+input[type="radio"] {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.btn-primary{
+    background-color: #F19425;
+    color: #fff;
+    border: none;
+    outline: #F19425;
+}
