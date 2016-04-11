@@ -40,7 +40,10 @@ def order(request):
 					setInners(o.order_security)
 					account.available_funds -= o.price*o.amount
 					account.save()
-					submitOrder(o) #Performs routine to attempt trades		
+
+					# orderSubmission(o) #Performs routine to attempt trades
+					
+					
 				else: 
 					o = None
 			else:
