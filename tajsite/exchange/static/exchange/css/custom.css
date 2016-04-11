@@ -1,6 +1,7 @@
 body { 
     padding-top: 70px; 
-    padding-left: 70px;
+    background-color: #77afe0;
+    background-image: url("../images/diamond-upholstery.png");
 }
 input[type="radio"] {
     margin-right: 10px;
@@ -12,3 +13,10 @@ input[type="radio"] {
     border: none;
     outline: #F19425;
 }
+.ticker{
+    background-color: #ffffff;
+    background-image: url("../images/diamond-upholstery.png");
+    margin-left: 80px;
+    margin-right: 80px;
+}
+

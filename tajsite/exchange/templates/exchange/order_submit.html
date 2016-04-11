@@ -1,12 +1,17 @@
 {% include "exchange/base.html" %}
-<!--DOCTYPE html -->
-<html>
-	<body>
-		{% if order %}
-		<h2>Order successfully submitted</h2>
-		<p>{{order}}</p>
-		{% else %}
-		<h2>Order submission failed</h2>
-		{% endif %}
-	</body>
-</html>
+<body>
+<div class="container-fluid">
+<div class="row">
+    <div class="text-center">
+	    {% if order %}
+	    <h2>Order successfully submitted</h2>
+	    <p>{{order}}</p>
+	    {% else %}
+	    <h2>Order submission failed</h2>
+	    {% endif %}
+        <a href="{% url 'exchange:order' %}" class="btn btn-primary" role="button">Place another order</a>  
+    </div>
+</div>
+</div>
+</body>
+

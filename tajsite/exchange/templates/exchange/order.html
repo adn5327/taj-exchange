@@ -1,18 +1,22 @@
 {% include "exchange/base.html" %}
 <!--DOCTYPE html -->
-<html>
-	<body>
-		{% if user.is_authenticated %}
-		<h2>Order form</h2>
-		<form action="/order/submit/" method="post">
-		{% csrf_token %}
-		{{form.as_p}}
-		<button class="btn btn-primary"/>Submit</button>
-		</form>
-		{% else %}
-		<h2>Not logged in</h2>
-		<br><br>
-		<p><a href="{% url 'exchange:login' %}">Log in</a> | <a href="{% url 'exchange:createaccount' %}">Create an account</a></p>    	
-		{% endif %}
-	</body>
-</html>
+<body>
+<div class="container-fluid">
+<div class="row">
+    <div class="text-center">
+	    {% if user.is_authenticated %}
+	    <h2>Order form</h2>
+	    <form action="/order/submit/" method="post">
+	    {% csrf_token %}
+	    {{form.as_p}}
+	    <button class="btn btn-primary"/>Submit</button>
+	    </form>
+	    {% else %}
+	    <h2>Not logged in</h2>
+	    <br><br>
+	    <p><a href="{% url 'exchange:login' %}">Log in</a> | <a href="{% url 'exchange:createaccount' %}">Create an account</a></p>    	
+	    {% endif %}
+    </div>
+</div>
+</div>
+</body>
