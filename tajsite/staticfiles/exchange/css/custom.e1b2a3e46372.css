@@ -1,0 +1,22 @@
+body { 
+    padding-top: 70px; 
+    background-color: #77afe0;
+    background-image: url("../images/diamond-upholstery.5140a3d935e5.png");
+}
+input[type="radio"] {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.btn-primary{
+    background-color: #F19425;
+    color: #fff;
+    border: none;
+    outline: #F19425;
+}
+.ticker{
+    background-color: #ffffff;
+    background-image: url("../images/diamond-upholstery.5140a3d935e5.png");
+    margin-left: 80px;
+    margin-right: 80px;
+}
+
