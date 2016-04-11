@@ -50,7 +50,7 @@ def performTrade(ask, bid, aggressor):
 	trade.save()
 
 def orderSubmission(order):
-	if order.bidask='ASK':
+	if order.bidask=='ASK':
 		orders = Order.objects.filter(order_security=order.security,bidask='BID').order_by('-price')	
 	else:
 		orders = Order.objects.filter(order_security=order.security, bidask='ASK').order_by('price')
@@ -61,7 +61,7 @@ def orderSubmission(order):
 	order_idx = 0
 	while continue_trading:
 		curr_order = orders[order_idx]
-		if order.bidask = 'ASK':
+		if order.bidask == 'ASK':
 			if order.price <= curr_order.price:
 				performTrade(order, curr_order, 'ASK')
 				if order.amount == 0:

@@ -11,7 +11,7 @@ from .models import Order, Security, Account
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
-from .func import submitOrder
+from .func import orderSubmission
 
 def index(request):
 	# context = {

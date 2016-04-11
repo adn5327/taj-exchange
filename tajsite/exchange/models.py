@@ -19,17 +19,17 @@ class Security(models.Model):
 
 class Posessions(models.Model):
 	account = models.ForeignKey('Account', on_delete=models.CASCADE)
-	security = models.ForeignKey('Security', on_delete=model.CASCADE)
+	security = models.ForeignKey('Security', on_delete=models.CASCADE)
 	amount = models.IntegerField(default=0)
 
 
 class Trade(models.Model):
 	trade_id = models.AutoField(primary_key=True)
-	bid_account = models.ForeignKey('Account', on_delete=models.DO_NOTHING))
-	ask_account = models.ForeignKey('Account', on_delete=models.DO_NOTHING))
-	security = models.ForeignKey('Security', on_delete=models.DO_NOTHING))
+	bid_account = models.ForeignKey('Account', related_name="bid_account", on_delete=models.DO_NOTHING)
+	ask_account = models.ForeignKey('Account', related_name="ask_account", on_delete=models.DO_NOTHING)
+	security = models.ForeignKey('Security', on_delete=models.DO_NOTHING)
 	price = models.IntegerField(default=0)
-	amount = modesl.IntegerField(default=0)
+	amount = models.IntegerField(default=0)
 
 	def __str__(self):
 		return str(self.trade_id) + ': ' + str(self.security) + ', ' + str(self.price) + ', ' + str(self.amount)	
