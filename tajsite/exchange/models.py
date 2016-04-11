@@ -17,6 +17,23 @@ class Security(models.Model):
 	def __str__(self):
 		return self.symbol
 
+class Posessions(models.Model):
+	account = models.ForeignKey('Account', on_delete=models.CASCADE)
+	security = models.ForeignKey('Security', on_delete=model.CASCADE)
+	amount = models.IntegerField(default=0)
+
+
+class Trade(models.Model):
+	trade_id = models.AutoField(primary_key=True)
+	bid_account = models.ForeignKey('Account', on_delete=models.DO_NOTHING))
+	ask_account = models.ForeignKey('Account', on_delete=models.DO_NOTHING))
+	security = models.ForeignKey('Security', on_delete=models.DO_NOTHING))
+	price = models.IntegerField(default=0)
+	amount = modesl.IntegerField(default=0)
+
+	def __str__(self):
+		return str(self.trade_id) + ': ' + str(self.security) + ', ' + str(self.price) + ', ' + str(self.amount)	
+
 class Order(models.Model):
 	start_time = models.DateTimeField('date started')
 	order_type = models.CharField(max_length=20,choices=(('Limit','Limit'),))
@@ -27,6 +44,15 @@ class Order(models.Model):
 	order_account = models.ForeignKey('Account', on_delete=models.CASCADE)
 	#NEED  'TRADE' RELATIONSHIP WITH ORDER
 	#need to update order_type,
+
+	def update(self, amount_change):
+		if self.amount >= amount_change:
+			self.amount -= amount_change
+			self.save()
+			return True
+		else:
+			return False
+
 
 	def __str__(self):
 		return str(self.id)+': '+self.bidask+' on ' + str(self.order_security) +' : '+str(self.amount)+' at '+str(self.price)

@@ -11,7 +11,7 @@ from .models import Order, Security, Account
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
-from .func import setInners
+from .func import submitOrder
 
 def index(request):
 	# context = {
@@ -41,6 +41,10 @@ def order(request):
 					setInners(o.order_security)
 					account.available_funds -= o.price*o.amount
 					account.save()
+					submitOrder(o) #Performs routine to attempt trades
+					
+					
+					
 				else: 
 					o = None
 			else:
