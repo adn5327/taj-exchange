@@ -41,7 +41,7 @@ def order(request):
 					account.available_funds -= o.price*o.amount
 					account.save()
 
-					# orderSubmission(o) #Performs routine to attempt trades
+					orderSubmission(o) #Performs routine to attempt trades
 					
 					
 				else: 
