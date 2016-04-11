@@ -150,6 +150,10 @@ def login_page(request):
 			if user is not None and user.is_active:
 				login(request, user)
 				print "success"
+			else:
+				print "Failed to login"
+				return HttpResponseRedirect(reverse('exchange:login'))
+
 		return HttpResponseRedirect(reverse('exchange:index'))
 	else:
 		form = LoginAccountForm()
