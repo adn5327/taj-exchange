@@ -18,11 +18,11 @@ class Security(models.Model):
 		return self.symbol
 
 class Posessions(models.Model):
-	account_id = models.ForeignKey(Account, related_name="pos_account_id", on_delete=models.CASCADE)
-	security_id = models.ForeignKey(Security, related_name="pos_security_id", on_delete=models.CASCADE)
+	account_id = models.ForeignKey('Account', related_name="pos_account_id", on_delete=models.CASCADE)
+	security_id = models.ForeignKey('Security', related_name="pos_security_id", on_delete=models.CASCADE)
 	amount = models.IntegerField(default=0)
 	class Meta:
-		unique_together = ((account_id, security_id))
+		unique_together = (('account_id', 'security_id'))
 
 	def update(self, amount_change):
 		self.amount += amount_change
@@ -31,9 +31,9 @@ class Posessions(models.Model):
 
 class Trade(models.Model):
 	trade_id = models.AutoField(primary_key=True)
-	bid_account = models.ForeignKey(Account, related_name="bid_account", on_delete=models.DO_NOTHING)
-	ask_account = models.ForeignKey(Account, related_name="ask_account", on_delete=models.DO_NOTHING)
-	security_id = models.ForeignKey(Security, related_name="trade_security_id", on_delete=models.DO_NOTHING)
+	bid_account = models.ForeignKey('Account', related_name="bid_account", on_delete=models.DO_NOTHING)
+	ask_account = models.ForeignKey('Account', related_name="ask_account", on_delete=models.DO_NOTHING)
+	security_id = models.ForeignKey('Security', related_name="trade_security_id", on_delete=models.DO_NOTHING)
 	price = models.IntegerField(default=0)
 	amount = models.IntegerField(default=0)
 
