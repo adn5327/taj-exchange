@@ -1,0 +1,29 @@
+{% load staticfiles %}
+{% include "exchange/base.html" %}
+
+<body>
+	{% if user.is_authenticated %}
+	<div>
+		<h2>Your Account funds</h2>
+		<p>{{account.print_funds_avail}}</p>
+		<p>{{account.print_funds_tot}}</p>
+		<br>
+	</div>
+	<div>
+		<h2>Your Orders</h2>
+		{% if orders %}
+		{% for order in orders %}
+		<p>{{order}}</p>
+		{% endfor %}
+		{% else %}
+		<p>You have no orders</p>
+		{% endif %}
+	</div>
+	{% else %}
+	<div>
+		<h2>Not logged in</h2>
+		<br><br>
+		<p><a href="{% url 'exchange:login' %}">Log in</a> | <a href="{% url 'exchange:createaccount' %}">Create an account</a></p>
+	</div>    	
+	{% endif %}
+</body>

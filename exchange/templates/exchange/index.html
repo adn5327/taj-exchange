@@ -1,0 +1,25 @@
+{% load staticfiles %}
+{% include "exchange/base.html" %}
+<body>
+
+
+<div class="container-fluid">
+    <a href="{% url 'exchange:orderbookall' %}">Full orderbook</a>
+    {% if user.is_authenticated %}
+    <br>
+    <a href="{% url 'exchange:order' %}">Submit an order</a>
+    <br>
+    <a href="{% url 'exchange:deleteorder' %}">Delete an order</a>
+    <br>
+    <a href="{% url 'exchange:updateaccount' %}">Update funds in an account</a>
+    <br>
+    <a href="{% url 'exchange:viewaccount' %}">View account</a>
+    <br><br>
+    {% if user.is_superuser %}
+    <a href="{% url 'admin:index' %}">Admin Home</a>
+    <br>
+    {% endif %}
+    {% endif %}
+</div>
+</body>
+

@@ -1,0 +1,12 @@
+{%load staticfiles%}
+{% include "exchange/base.html" %}
+
+<body>
+	<h2>Account Form</h2>
+	<form action="/account/create/submit" method="post">
+	{% csrf_token %}
+	{{form.as_p}}
+	<button class="btn btn-primary"/>Create account!</button>
+	</form>
+</body>
+
