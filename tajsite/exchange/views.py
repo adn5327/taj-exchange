@@ -11,7 +11,7 @@ from .models import Order, Security, Account
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
-from .func import orderSubmission
+from .func import orderSubmission, setInners
 
 def index(request):
 	# context = {
@@ -35,20 +35,15 @@ def order(request):
 				order_security=f['order_security'][0],
 				order_account=account)
 			if o.bidask == 'BID':
-				print 'yo'
 				if o.price * o.amount <= account.available_funds:
 					o.save()
 					setInners(o.order_security)
 					account.available_funds -= o.price*o.amount
 					account.save()
-					submitOrder(o) #Performs routine to attempt trades
-					
-					
-					
+					submitOrder(o) #Performs routine to attempt trades		
 				else: 
 					o = None
 			else:
-				print 'not yo'
 				o.save()
 				setInners(o.order_security)
 			context = {
@@ -153,17 +148,23 @@ def login_page(request):
 			user = authenticate(username=username,password=password) 
 			if user is not None and user.is_active:
 				login(request, user)
-				print "success"
 			else:
-				print "Failed to login"
-				return HttpResponseRedirect(reverse('exchange:login'))
+				form = LoginAccountForm()
+				error = 'Could not log you in. Please try again'
+				context={
+					'form':form,
+					'user':request.user,
+					'error':error
+				}
+				return render(request, 'exchange/login_page.html',context)
 
 		return HttpResponseRedirect(reverse('exchange:index'))
 	else:
 		form = LoginAccountForm()
 		context={
 			'form':form,
-			'user':request.user
+			'user':request.user,
+			'error':None
 		}
 		return render(request, 'exchange/login_page.html',context)
 

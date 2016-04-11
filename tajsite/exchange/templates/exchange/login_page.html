@@ -2,6 +2,9 @@
 {% include "exchange/base.html" %}
 
 <body>
+	{% if error %}
+	<script type="text/javascript">alert("{{error}}");</script>
+	{% endif %}
 	<h2>Login</h2>
 	<form action="/account/login/submit" method="post">
 	{% csrf_token %}
