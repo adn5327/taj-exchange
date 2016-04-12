@@ -1,6 +1,8 @@
 from .forms import OrderForm, CreateAccountForm, UpdateAccountForm
-
+from django.core.urlresolvers import reverse
 from .models import Order, Security, Account, Trade, Possessions
+from django.shortcuts import render
+from django.db import connection
 
 def setInners(security):
 	ask_orders = Order.objects.filter(order_security=security,bidask='ASK').order_by('price')
@@ -13,6 +15,7 @@ def setInners(security):
 		security.inner_bid = 0
 	else:
 		security.inner_bid = bid_orders[0].price
+	
 	security.save()
 
 
@@ -112,6 +115,15 @@ def orderSubmission(order):
 				order_idx += 1
 			else:
 				continue_trading = False
+def closeAndRedirect(url):
+	print len(connection.queries)
+	connection.close()
+	# if rev:		
+	url = reverse(url)
+	return HttpResponseRedirect(url)
 
-
+def closeAndRender(request, url, context):
+	print len(connection.queries)
+	connection.close()
+	return render(request, url, context)
 
