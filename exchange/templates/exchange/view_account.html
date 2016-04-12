@@ -3,33 +3,34 @@
 
 <body>
 	{% if user.is_authenticated %}
-	<div>
-		<h2>Your Account funds</h2>
-		<p>{{account.print_funds_avail}}</p>
-		<p>{{account.print_funds_tot}}</p>
-		<br>
-	</div>
-	<div>
-		<h2>Your Orders</h2>
-		{% if orders %}
-		{% for order in orders %}
-		<p>{{order}}</p>
-		{% endfor %}
-		{% else %}
-		<p>You have no orders</p>
-		{% endif %}
-		<br>
-	</div>
-	<div>
-		<h2>Your Securities</h2>
-		{% if possessions %}
-		{% for poss in possessions %}
-		<p>{{poss}}</p>
-		{% endfor %}
-		{% else %}
-		<p>You have no securities</p>
-		{% endif %}
-	</div>
+    <div class="container-fluid">
+	    <div class="row left-padded">
+	    	<h2>YOUR FUNDS</h2>
+	    	<p>{{account.print_funds_avail}}</p>
+	    	<p>{{account.print_funds_tot}}</p>
+	    	<br>
+	    </div>
+	    <div class="row left-padded">
+	    	<h2>YOUR ORDERS</h2>
+	    	{% if orders %}
+	    	{% for order in orders %}
+	    	<p>{{order}}</p>
+	    	{% endfor %}
+	    	{% else %}
+	    	<p>You have no orders</p>
+	    	{% endif %}
+	    </div>
+	    <div class="row left-padded">
+			<h2>Your Securities</h2>
+			{% if possessions %}
+			{% for poss in possessions %}
+			<p>{{poss}}</p>
+			{% endfor %}
+			{% else %}
+			<p>You have no securities</p>
+			{% endif %}
+		</div>
+    </div>
 	{% else %}
 	<div>
 		<h2>Not logged in</h2>

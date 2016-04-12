@@ -2,15 +2,21 @@
 <!--DOCTYPE html -->
 <body>
 <div class="container-fluid">
-<div class="row">
-    <div class="text-center">
 	    {% if user.is_authenticated %}
-	    <h2>Order form</h2>
-	    <form action="/order/submit/" method="post">
-	    {% csrf_token %}
-	    {{form.as_p}}
-	    <button class="btn btn-primary"/>Submit</button>
-	    </form>
+	    <div class="text-center form-title"><h2>Order form</h2></div>
+        <div class="row">
+        <div class="text-center">
+	        <form action="/order/submit/" method="post">
+	        {% csrf_token %}
+            <table class="acct-form">
+	        {{form.as_table}}
+            </table>
+        </div>
+        </div>
+        <div class="row text-center">
+	        <button class="btn btn-primary"/>Submit</button>
+	        </form>
+        </div>
 	    {% else %}
 	    <h2>Not logged in</h2>
 	    <br><br>
