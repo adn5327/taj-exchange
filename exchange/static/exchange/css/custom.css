@@ -1,7 +1,13 @@
+* {
+    font-family: 'Lato', sans-serif;
+}
 body { 
     padding-top: 70px; 
     background-color: #77afe0;
     background-image: url("../images/diamond-upholstery.png");
+}
+.bodypad{
+    padding-left: 70px;
 }
 input[type="radio"] {
     margin-right: 10px;
@@ -19,4 +25,22 @@ input[type="radio"] {
     margin-left: 80px;
     margin-right: 80px;
 }
+.acct-form{
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+}
+.form-title{
+    padding-bottom:20px;
+}
+th, td {
+    padding-right: 20px;
+    padding-bottom:20px;
+}
+tr {
+    margin-bottom: 90px;
+}
 
+.left-padded{
+    padding-left: 50px;
+}

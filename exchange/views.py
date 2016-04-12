@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 
 from .forms import OrderForm, CreateAccountForm, UpdateAccountForm, LoginAccountForm
 
-from .models import Order, Security, Account
+from .models import Order, Security, Account, Possessions
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -42,13 +42,16 @@ def order(request):
 					account.save()
 
 					# orderSubmission(o) #Performs routine to attempt trades
-					
-					
 				else: 
 					o = None
-			else:
-				o.save()
-				setInners(o.order_security)
+			else:#When it is an ASK
+				acct_pos = Possessions.objects.filter(account_id=o.order_account,security_id=o.order_security)
+				print acct_pos
+				if acct_pos and acct_pos[0].amount >= o.amount:
+					o.save()
+					setInners(o.order_security)
+				else:
+					o = None
 			context = {
 				'order':o,
 			}

@@ -17,7 +17,7 @@ class Security(models.Model):
 	def __str__(self):
 		return self.symbol
 
-class Posessions(models.Model):
+class Possessions(models.Model):
 	account_id = models.ForeignKey('Account', related_name="pos_account_id", on_delete=models.CASCADE)
 	security_id = models.ForeignKey('Security', related_name="pos_security_id", on_delete=models.CASCADE)
 	amount = models.IntegerField(default=0)

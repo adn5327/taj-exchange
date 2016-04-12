@@ -1,7 +1,7 @@
 {% include "exchange/base.html" %}
 <!--DOCTYPE html -->
 <html>
-	<body>
+	<body class= "bodypad">
 		{% if user.is_authenticated %}
 		{% if orders %}
 		<form action="/deleteorder/" method="POST">

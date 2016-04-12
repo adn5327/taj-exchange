@@ -1,6 +1,6 @@
 from .forms import OrderForm, CreateAccountForm, UpdateAccountForm
 
-from .models import Order, Security, Account, Trade, Posessions
+from .models import Order, Security, Account, Trade, Possessions
 
 def setInners(security):
 	ask_orders = Order.objects.filter(order_security=security,bidask='ASK').order_by('price')
@@ -41,10 +41,10 @@ def performTrade(ask, bid, aggressor):
 	ask.update(trade_amount)
 	bid.update(trade_amount)
 
-	bidder_pos = Posession.objects.filter(account=bid.account,security=bid.order_security)
-	ask_pos = Posession.objects.filter(account=ask.account,security=ask.order_security)
+	bidder_pos = Possessions.objects.filter(account=bid.account,security=bid.order_security)
+	ask_pos = Possessions.objects.filter(account=ask.account,security=ask.order_security)
 	if bidder_pos is None:
-		bidder_pos = Posessions(
+		bidder_pos = Possessions(
 			account = bid.order_account,
 			security = bid.order_security,
 			amount = trade_amount)
@@ -52,7 +52,7 @@ def performTrade(ask, bid, aggressor):
 	else:
 		bidder_pos.update(trade_amount)	
 	if ask_pos is None:
-		ask_pos = Posessions(
+		ask_pos = Possessions(
 			account = ask.order_account,
 			security = ask.order_security,
 			amount = -trade_amount)
