@@ -11,7 +11,7 @@ from .models import Order, Security, Account, Possessions
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
-from .func import orderSubmission, setInners, closeAndRender
+from .func import orderSubmission, setInners, closeAndRender, closeAndRedirect
 
 
 def index(request):
@@ -98,7 +98,7 @@ def order_book(request):
 		'book':book,
 		'user':request.user
 	}
-	print connection.queries
+	# print connection.queries
 	# connection.close()
 	return closeAndRender(request, 'exchange/orderbook.html',context)
 	# return render(request, 'exchange/orderbook.html',context)

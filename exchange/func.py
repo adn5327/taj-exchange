@@ -1,5 +1,6 @@
 from .forms import OrderForm, CreateAccountForm, UpdateAccountForm
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Order, Security, Account, Trade, Possessions
 from django.shortcuts import render
 from django.db import connection
