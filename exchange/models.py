@@ -71,8 +71,8 @@ class Account(models.Model):
 	total_funds = models.IntegerField(default=0)
 	available_funds = models.IntegerField(default=0)
 	SSN = models.IntegerField(default=0)
-	account_securities = models.ManyToManyField('Security', blank=True)
-	account_orders = models.ManyToManyField('Order', blank=True)
+	#account_securities = models.ManyToManyField('Possessions', blank=True)
+	#account_orders = models.ManyToManyField('Order', blank=True)
 
 	def updateTotal(self, change_in_funds):
 		self.total_funds += change_in_funds

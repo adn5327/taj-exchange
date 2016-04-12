@@ -11,6 +11,8 @@ from .models import Order, Security, Account, Possessions
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
+from django.db import connection
+
 from .func import orderSubmission, setInners
 
 def index(request):
@@ -215,5 +217,7 @@ def view_account(request):
 		'possessions':possessions,
 		'user':request.user
 	}
+	for q in connection.queries:
+		print q
 	return render(request, 'exchange/view_account.html',context) 
 
