@@ -28,6 +28,9 @@ class Possessions(models.Model):
 		self.amount += amount_change
 		self.save()
 
+	def __str__(self):
+		return self.security_id.symbol + ': ' + str(self.amount) + ' shares'
+
 
 class Trade(models.Model):
 	trade_id = models.AutoField(primary_key=True)

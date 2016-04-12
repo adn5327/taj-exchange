@@ -34,6 +34,7 @@ def order(request):
 				amount=f['amount'],
 				order_security=f['order_security'][0],
 				order_account=account)
+			error=None
 			if o.bidask == 'BID':
 				if o.price * o.amount <= account.available_funds:
 					o.save()
@@ -43,20 +44,24 @@ def order(request):
 
 					# orderSubmission(o) #Performs routine to attempt trades
 				else: 
+					error = 'Not enough funds in your account'
 					o = None
 			else:#When it is an ASK
 				acct_pos = Possessions.objects.filter(account_id=o.order_account,security_id=o.order_security)
-				print acct_pos
 				if acct_pos and acct_pos[0].amount >= o.amount:
 					o.save()
 					setInners(o.order_security)
 				else:
+					error = 'You don\'t own that amount of that security'
 					o = None
 			context = {
+				'error':error,
 				'order':o,
 			}
 		else:
+			error='Invalid form entry'
 			context = {
+				'error':error,
 				'order':None
 			}
 		return render(request, "exchange/order_submit.html", context)
@@ -201,17 +206,14 @@ def update_account(request):
 
 
 def view_account(request):
-	if request.user.is_authenticated():
-		account = Account.objects.get(user=request.user)
-		orders = Order.objects.filter(order_account=account)
-		context = {
-			'account':account,
-			'orders':orders,
-			'user':request.user
-		}
-	else:
-		context = {
-			'user':request.user
-		}
+	account = Account.objects.get(user=request.user)
+	orders = Order.objects.filter(order_account=account)
+	possessions = Possessions.objects.filter(account_id=account)
+	context = {
+		'account':account,
+		'orders':orders,
+		'possessions':possessions,
+		'user':request.user
+	}
 	return render(request, 'exchange/view_account.html',context) 
 

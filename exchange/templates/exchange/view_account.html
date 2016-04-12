@@ -18,6 +18,17 @@
 		{% else %}
 		<p>You have no orders</p>
 		{% endif %}
+		<br>
+	</div>
+	<div>
+		<h2>Your Securities</h2>
+		{% if possessions %}
+		{% for poss in possessions %}
+		<p>{{poss}}</p>
+		{% endfor %}
+		{% else %}
+		<p>You have no securities</p>
+		{% endif %}
 	</div>
 	{% else %}
 	<div>
