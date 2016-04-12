@@ -5,10 +5,16 @@
 	{% if error %}
 	<script type="text/javascript">alert("{{error}}");</script>
 	{% endif %}
-	<h2>Login</h2>
-	<form action="/account/login/submit" method="post">
-	{% csrf_token %}
-	{{form.as_p}}
-	<button class="btn btn-primary"/>Submit</button>
-	</form>
+    <div class="container-fluid">
+	    <div class="text-center form-title"><h2>Login</h2></div>
+	    <form action="/account/login/submit" method="post">
+	    {% csrf_token %}
+        <table class="acct-form">
+	    {{form.as_table}}
+        </table>
+        <div class="text-center">
+	    <button class="btn btn-primary text-center"/>Submit</button>
+	    </form>
+        </div>
+    </div>
 </body>
