@@ -106,17 +106,19 @@ def order_book(request):
 
 def delete_order(request):
 	if request.method == 'POST':
-		order_id = request.POST.get('order')
-		order = Order.objects.get(id=order_id)
-		order.delete()
-		setInners(order.order_security)
-		account = Account.objects.get(user=request.user)
-		if order.bidask == 'BID':
-			account.available_funds += order.price*order.amount
-			account.save()
-		# connection.close()
+		order_ids = request.POST.getlist('order')
+		for order_id in order_ids:
+			order = Order.objects.get(id=order_id)
+			order.delete()
+			setInners(order.order_security)
+			account = Account.objects.get(user=request.user)
+			if order.bidask == 'BID':
+				account.available_funds += order.price*order.amount
+				account.save()
+			# connection.close()
+
 		return closeAndRedirect('exchange:index')
-		# return redirect('/')
+			# return redirect('/')
 	else:
 		account = Account.objects.get(user=request.user)
 		orders = Order.objects.filter(order_account=account)
