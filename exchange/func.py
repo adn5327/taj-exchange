@@ -35,42 +35,45 @@ def performTrade(ask, bid, aggressor):
 	trade = Trade(
 		bid_account = bid.order_account,
 		ask_account = ask.order_account,
-		security = ask.order_security,
+		security_id = ask.order_security,
 		price = trade_price,
-		amount = trade_amount
+		amount = int(trade_amount)
 		)
-	print trade
+	# print trade
 	# ask.amount -= trade_amount
 	# bid.amount -= trade_amount
 	ask.update(trade_amount)
 	bid.update(trade_amount)
 
-	bidder_pos = Possessions.objects.filter(account=bid.account,security=bid.order_security)
-	ask_pos = Possessions.objects.filter(account=ask.account,security=ask.order_security)
-	if bidder_pos is None:
+	bidder_pos = Possessions.objects.filter(account_id=bid.order_account,security_id=bid.order_security)
+	ask_pos = Possessions.objects.filter(account_id=ask.order_account,security_id=ask.order_security)
+	if len(bidder_pos) == 0:
 		bidder_pos = Possessions(
-			account = bid.order_account,
-			security = bid.order_security,
+			account_id = bid.order_account,
+			security_id = bid.order_security,
 			amount = trade_amount)
 		bidder_pos.save()
 	else:
+		bidder_pos = bidder_pos[0]
+		print bidder_pos
 		bidder_pos.update(trade_amount)	
-	if ask_pos is None:
+	if len(ask_pos) == 0:
 		ask_pos = Possessions(
-			account = ask.order_account,
-			security = ask.order_security,
+			account_id = ask.order_account,
+			security_id = ask.order_security,
 			amount = -trade_amount)
 		ask_pos.save()
 
 	else:
+		ask_pos = ask_pos[0]
 		ask_pos.update(-trade_amount)
 
 	# bidder_pos.amount += trade_amount
 	# ask_pos.amount -= trade_amount
 	
 	total_price = trade_amount * trade_price
-	bid.account.updateTotal(-total_price)
-	ask.account.updateTotal(total_price)
+	bid.order_account.updateTotal(-total_price)
+	ask.order_account.updateBoth(total_price, total_price)
 
 	# bid.account.total_funds -= (trade_amount * trade_price)
 
@@ -102,6 +105,8 @@ def orderSubmission(order):
 				if curr_order.amount == 0:
 					curr_order.delete()
 				order_idx += 1
+				if order_idx >= len(orders):
+					continue_trading = False
 			else:
 				continue_trading = False
 		else:
@@ -114,6 +119,8 @@ def orderSubmission(order):
 				if curr_order.amount == 0:
 					curr_order.delete()
 				order_idx += 1
+				if order_idx >= len(orders):
+					continue_trading = False
 			else:
 				continue_trading = False
 def closeAndRedirect(url):

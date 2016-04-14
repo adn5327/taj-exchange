@@ -45,7 +45,7 @@ def order(request):
 					account.available_funds -= o.price*o.amount
 					account.save()
 
-					# orderSubmission(o) #Performs routine to attempt trades
+					orderSubmission(o) #Performs routine to attempt trades
 				else: 
 					error = 'Not enough funds in your account'
 					o = None
@@ -55,6 +55,7 @@ def order(request):
 				if acct_pos and acct_pos[0].amount >= o.amount:
 					o.save()
 					setInners(o.order_security)
+					orderSubmission(o)
 				else:
 					error = 'You don\'t own that amount of that security'
 					o = None
