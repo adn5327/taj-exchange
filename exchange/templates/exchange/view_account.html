@@ -19,7 +19,18 @@
 	    	{% else %}
 	    	<p>You have no orders</p>
 	    	{% endif %}
+	    	<br>
 	    </div>
+	    <div class="row left-padded">
+			<h2>YOUR SECURITIES</h2>
+			{% if possessions %}
+			{% for poss in possessions %}
+			<p>{{poss}}</p>
+			{% endfor %}
+			{% else %}
+			<p>You have no securities</p>
+			{% endif %}
+		</div>
     </div>
 	{% else %}
 	<div>

@@ -8,6 +8,7 @@
 	    <p>{{order}}</p>
 	    {% else %}
 	    <h2>Order submission failed</h2>
+	    <p>{{error}}</p>
 	    {% endif %}
         <a href="{% url 'exchange:order' %}" class="btn btn-primary" role="button">Place another order</a>  
     </div>

@@ -7,7 +7,7 @@
 		<form action="/deleteorder/" method="POST">
 			{% csrf_token %}
 			{% for order in orders %}
-			<input type="radio" name="order" value="{{order.id}}"/>{{order}}<br>
+			<input type="checkbox" name="order" value="{{order.id}}"/>{{order}}<br>
 			{% endfor %}
 			<button class="btn btn-primary" value="Delete Order"/>Delete Order</button>
 		</form>
