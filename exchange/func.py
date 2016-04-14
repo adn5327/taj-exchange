@@ -39,9 +39,7 @@ def performTrade(ask, bid, aggressor):
 		price = trade_price,
 		amount = int(trade_amount)
 		)
-	# print trade
-	# ask.amount -= trade_amount
-	# bid.amount -= trade_amount
+
 	ask.update(trade_amount)
 	bid.update(trade_amount)
 
@@ -67,18 +65,10 @@ def performTrade(ask, bid, aggressor):
 	else:
 		ask_pos = ask_pos[0]
 		ask_pos.update(-trade_amount)
-
-	# bidder_pos.amount += trade_amount
-	# ask_pos.amount -= trade_amount
 	
 	total_price = trade_amount * trade_price
 	bid.order_account.updateTotal(-total_price)
 	ask.order_account.updateBoth(total_price, total_price)
-
-	# bid.account.total_funds -= (trade_amount * trade_price)
-
-	# ask.account.total_funds += (trade_amount * trade_price)
-	# ask.account.available_funds += (trade_amount * trade_price)
 
 	trade.save()
 
@@ -126,7 +116,6 @@ def orderSubmission(order):
 def closeAndRedirect(url):
 	print len(connection.queries)
 	connection.close()
-	# if rev:		
 	url = reverse(url)
 	return HttpResponseRedirect(url)
 

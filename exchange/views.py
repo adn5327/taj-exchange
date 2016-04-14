@@ -15,13 +15,9 @@ from .func import orderSubmission, setInners, closeAndRender, closeAndRedirect
 
 
 def index(request):
-	# context = {
-	# 	'user':request.user
-	# }
-	# connection.close()
-	# return HttpResponseRedirect(reverse('exchange:orderbookall'))
+
 	return closeAndRedirect('exchange:orderbookall')
-	#return render(request, 'exchange/index.html', context)
+
 
 def order(request):
 	if request.method == 'POST':
@@ -70,22 +66,16 @@ def order(request):
 				'error':error,
 				'order':None
 			}
-		# print connection.queries
-		# print len(connection.queries)
-		# connection.close()
+
 		return closeAndRender(request, "exchange/order_submit.html", context)
-		# return render(request, "exchange/order_submit.html", context)
+
 	else:
 		form = OrderForm()
 		context = {
 			'form':form,
 			'user':request.user
 		}
-		# print connection.queries
-		# print len(connection.queries)
-		# connection.close()
 		return closeAndRender(request, 'exchange/order.html', context)
-		# return render(request, 'exchange/order.html', context)
 
 
 def order_book(request):
@@ -99,10 +89,7 @@ def order_book(request):
 		'book':book,
 		'user':request.user
 	}
-	# print connection.queries
-	# connection.close()
 	return closeAndRender(request, 'exchange/orderbook.html',context)
-	# return render(request, 'exchange/orderbook.html',context)
 
 
 def delete_order(request):
@@ -116,19 +103,15 @@ def delete_order(request):
 			if order.bidask == 'BID':
 				account.available_funds += order.price*order.amount
 				account.save()
-			# connection.close()
 
 		return closeAndRedirect('exchange:index')
-			# return redirect('/')
 	else:
 		account = Account.objects.get(user=request.user)
 		orders = Order.objects.filter(order_account=account)
 		context={
 			'orders':orders
 		}
-		# connection.close()
 		return closeAndRender(request, 'exchange/delete_order.html',context)
-		# return render(request, 'exchange/delete_order.html',context)
 
 
 def create_account(request):
@@ -163,18 +146,14 @@ def create_account(request):
 				'account':None,
 				'errors':err
 			}
-		# connection.close()
 		return closeAndRender(request, 'exchange/create_account_submit.html', context)
-		# return render(request, 'exchange/create_account_submit.html', context)
 	else:
 		form = CreateAccountForm()
 		context={
 			'form':form,
 			'user':request.user
 		}
-		# connection.close()
 		return closeAndRender(request, 'exchange/create_account.html', context)
-		# return render(request, 'exchange/create_account.html', context)
 
 def login_page(request):
 	if request.method == 'POST':
@@ -194,12 +173,8 @@ def login_page(request):
 					'user':request.user,
 					'error':error
 				}
-				# connection.close()
 				return closeAndRender(request, 'exchange/login_page.html',context)
-				# return render(request, 'exchange/login_page.html',context)
-		# connection.close()
 		return closeAndRedirect('exchange:index')
-		# return HttpResponseRedirect(reverse('exchange:index'))
 	else:
 		form = LoginAccountForm()
 		context={
@@ -207,14 +182,10 @@ def login_page(request):
 			'user':request.user,
 			'error':None
 		}
-		# connection.close()
-		# return render(request, 'exchange/login_page.html',context)
 		return closeAndRender(request, 'exchange/login_page.html',context)
 
 def logout_page(request):
 	logout(request)
-	# connection.close()
-	# return HttpResponseRedirect(reverse('exchange:index'))
 	return closeAndRedirect('exchange:index')
 
 def update_account(request):
@@ -229,18 +200,14 @@ def update_account(request):
 				cur_account.total_funds = cur_funds_tot + f['funds']
 				cur_account.available_funds = cur_funds_avail + f['funds']
 				cur_account.save()                
-		# connection.close()
 		return closeAndRedirect('exchange:index')
-		# return HttpResponseRedirect(reverse('exchange:index'))
 	else:
 		form = UpdateAccountForm()
 		context={
 			'form':form,
 			'user':request.user
 		}
-		# connection.close()
 		return closeAndRender(request, 'exchange/update_account.html',context) 
-		# return render(request, 'exchange/update_account.html',context) 
 
 
 def view_account(request):
@@ -255,8 +222,5 @@ def view_account(request):
 		'user':request.user
 	}
 	
-	# connection.close()
 	return closeAndRender(request, 'exchange/view_account.html',context) 
-	# return render(request, 'exchange/view_account.html',context) 
-
 
