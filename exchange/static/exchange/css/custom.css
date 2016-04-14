@@ -9,6 +9,10 @@ body {
 .bodypad{
     padding-left: 70px;
 }
+select[multiple]{
+    font-family: 'Lato', sans-serif;
+    height: auto;
+}
 input[type="radio"] {
     margin-right: 10px;
     margin-bottom: 10px;
