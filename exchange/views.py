@@ -34,7 +34,10 @@ def order(request):
 				order_security=f['order_security'][0],
 				order_account=account)
 			error=None
-			if o.bidask == 'BID':
+			if o.amount < 1 or o.price < 1:
+				error = 'Price and amount must be greater than zero'
+				o = None
+			elif o.bidask == 'BID':
 				if o.price * o.amount <= account.available_funds:
 					o.save()
 					setInners(o.order_security)
