@@ -19,107 +19,100 @@ def setInners(security):
 	
 	security.save()
 
-
-
-def performTrade(ask, bid, aggressor):
-	if aggressor == 'ASK':
-		trade_price = ask.price
+def updatePosession(account, security, trade_amount, order_type):
+	if account is None or security is None or trade_amount == 0:
+		return 
+	pos_list = Possessions.objects.filter(account_id=account, security_id=security)
+	if len(pos_list) == 0:
+		pos = Possessions(
+			account_id = account,
+			security_id = security,
+			total_amount = trade_amount,
+			available_amount = trade_amount)
+		pos.save()
 	else:
+		pos = pos_list[0]
+		if pos.total_amount + trade_amount == 0:
+			pos.delete()
+		elif order_type == 'BID':
+			pos.updateBoth(trade_amount)
+		else:
+			pos.updateTotal(trade_amount)
+
+
+def performTrade(order, potential_order, aggressor):
+
+	if aggressor == 'ASK':
+		ask = order
+		bid = potential_order
 		trade_price = bid.price
-	print
-	print ask
-	print bid
+	else:
+		ask = potential_order
+		bid = order
+		trade_price = ask.price
+	
 	trade_amount = min(ask.amount, bid.amount)
-	print trade_amount
-	print type(trade_amount)
+	
 	trade = Trade(
 		bid_account = bid.order_account,
 		ask_account = ask.order_account,
-		security = ask.order_security,
+		security_id = ask.order_security,
 		price = trade_price,
-		amount = trade_amount
+		amount = int(trade_amount)
 		)
-	print trade
-	# ask.amount -= trade_amount
-	# bid.amount -= trade_amount
+
 	ask.update(trade_amount)
 	bid.update(trade_amount)
+	updatePosession(bid.order_account, bid.order_security, trade_amount, 'BID') #Bid account possession increases
+	updatePosession(ask.order_account, ask.order_security, -trade_amount, 'ASK') #Ask account possession decreases
 
-	bidder_pos = Possessions.objects.filter(account=bid.account,security=bid.order_security)
-	ask_pos = Possessions.objects.filter(account=ask.account,security=ask.order_security)
-	if bidder_pos is None:
-		bidder_pos = Possessions(
-			account = bid.order_account,
-			security = bid.order_security,
-			amount = trade_amount)
-		bidder_pos.save()
-	else:
-		bidder_pos.update(trade_amount)	
-	if ask_pos is None:
-		ask_pos = Possessions(
-			account = ask.order_account,
-			security = ask.order_security,
-			amount = -trade_amount)
-		ask_pos.save()
-
-	else:
-		ask_pos.update(-trade_amount)
-
-	# bidder_pos.amount += trade_amount
-	# ask_pos.amount -= trade_amount
-	
 	total_price = trade_amount * trade_price
-	bid.account.updateTotal(-total_price)
-	ask.account.updateTotal(total_price)
-
-	# bid.account.total_funds -= (trade_amount * trade_price)
-
-	# ask.account.total_funds += (trade_amount * trade_price)
-	# ask.account.available_funds += (trade_amount * trade_price)
+	bid.order_account.updateTotal(-total_price)
+	ask.order_account.updateBoth(total_price, total_price)
+	bid.order_security.updateFMV(trade_price)
 
 	trade.save()
+
+def checkValidOrder(order, potential_order):
+	if order is None or potential_order is None:
+		return False
+	if order.bidask == 'ASK':
+		return order.price <= potential_order.price
+	else:
+		return order.price >= potential_order.price
+
+def orderMatch(order, potential_order):
+	if checkValidOrder(order, potential_order) == False:
+		return False
+	performTrade(order, potential_order, order.bidask)
+	if potential_order.amount == 0:
+		potential_order.delete()
+	if order.amount == 0:
+		order.delete()
+		return False
+	return True
 
 def orderSubmission(order):
 	if order.bidask=='ASK':
 		orders = Order.objects.filter(order_security=order.order_security,bidask='BID').order_by('-price')	
 	else:
 		orders = Order.objects.filter(order_security=order.order_security, bidask='ASK').order_by('price')
-	print orders
-	print order
 	if len(orders) == 0:
-		return False
+		return
 	continue_trading = True
 	order_idx = 0
 	while continue_trading:
 		curr_order = orders[order_idx]
-		if order.bidask == 'ASK':
-			if order.price <= curr_order.price:
-				print 'ASKING'
-				performTrade(order, curr_order, 'ASK')
-				if order.amount == 0:
-					order.delete()
-					continue_trading = False
-				if curr_order.amount == 0:
-					curr_order.delete()
-				order_idx += 1
-			else:
-				continue_trading = False
-		else:
-			if order.price >= curr_order.price:
-				print 'BIDDING'
-				performTrade(curr_order, order, 'BID')
-				if order.amount == 0:
-					order.delete()
-					continue_trading = False
-				if curr_order.amount == 0:
-					curr_order.delete()
-				order_idx += 1
-			else:
-				continue_trading = False
+		order_idx += 1
+
+		# Attempt to match order. If this returns false 
+		# 	or if we have no more potential orders quit trading
+
+		continue_trading = orderMatch(order, curr_order) and (order_idx < len(orders))
+
 def closeAndRedirect(url):
 	print len(connection.queries)
 	connection.close()
-	# if rev:		
 	url = reverse(url)
 	return HttpResponseRedirect(url)
 

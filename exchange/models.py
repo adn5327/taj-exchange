@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 class Security(models.Model):
 	symbol = models.CharField(primary_key=True,max_length=5)
+	sector = models.CharField(default='Unknown',max_length=25)
 	volume = models.IntegerField(default=0)
 	inner_bid = models.IntegerField(default=0)
 	inner_ask = models.IntegerField(default=0)
@@ -14,22 +15,38 @@ class Security(models.Model):
 	security_accounts = models.ManyToManyField('Account', blank=True)
 	#inner_bid, inner_ask, and fmv come from orders db
 
+	def updateFMV(self, new_fmv):
+		self.fmv = new_fmv
+		self.save()
+
 	def __str__(self):
 		return self.symbol
 
 class Possessions(models.Model):
 	account_id = models.ForeignKey('Account', related_name="pos_account_id", on_delete=models.CASCADE)
 	security_id = models.ForeignKey('Security', related_name="pos_security_id", on_delete=models.CASCADE)
-	amount = models.IntegerField(default=0)
+	available_amount = models.IntegerField(default=0)
+	total_amount = models.IntegerField(default=0)
 	class Meta:
 		unique_together = (('account_id', 'security_id'))
 
-	def update(self, amount_change):
-		self.amount += amount_change
+	def updateTotal(self, amount_change):
+		self.total_amount += amount_change
+		self.save()
+
+	def updateAvailable(self, amount_change):
+		self.available_amount += amount_change
+		self.save()
+
+	def updateBoth(self, amount_change):
+		self.total_amount += amount_change
+		self.available_amount += amount_change
 		self.save()
 
 	def __str__(self):
-		return self.security_id.symbol + ': ' + str(self.amount) + ' shares'
+		return self.security_id.symbol + ': Available shares = ' \
+			+ str(self.available_amount) + ' Total shares = ' \
+			+ str(self.total_amount) + ' shares'
 
 
 class Trade(models.Model):
