@@ -83,17 +83,24 @@ def order(request):
 
 
 def order_book(request):
-	book = {}
-	securities = Security.objects.all()
-	for sec in securities:
+    book = {}
+    if request.method == 'POST':
+        sectorpost = request.POST['sector']
+        if sectorpost == 'all':
+            securities = Security.objects.all()
+        else:
+            securities = Security.objects.filter(sector=sectorpost)
+    else: 
+	    securities = Security.objects.all()
+    for sec in securities:
 		bids = Order.objects.filter(order_security=sec,bidask='BID').order_by('-price')
 		asks = Order.objects.filter(order_security=sec,bidask='ASK').order_by('price')
-		book[sec.symbol] = {'bids':bids,'asks':asks}
-	context={
+		book[sec.symbol] = {'bids':bids,'asks':asks, 'sector':sec.sector}
+    context={
 		'book':book,
 		'user':request.user
 	}
-	return closeAndRender(request, 'exchange/orderbook.html',context)
+    return closeAndRender(request, 'exchange/orderbook.html',context)
 
 
 def delete_order(request):

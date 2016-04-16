@@ -3,11 +3,26 @@
 
 <body>
 <div class="container-fluid">
+    <form action="{% url 'exchange:orderbookall' %}" method="post">
+    {% csrf_token %}
+        <button type="submit" name="sector" value="all">All</button>  
+        <button type="submit" name="sector" value="Energy">Energy</button>  
+        <button type="submit" name="sector" value="Telecom">Telecom</button>  
+        <button type="submit" name="sector" value="Utilities">Utilities</button>  
+        <button type="submit" name="sector" value="Technology">Technology</button>  
+        <button type="submit" name="sector" value="Cyclical Goods">Cyclical Goods</button>  
+        <button type="submit" name="sector" value="Basic Materials">Basic Materials</button>  
+        <button type="submit" name="sector" value="Industrials">Industrials</button>  
+        <button type="submit" name="sector" value="NonCyclical Goods">NonCyclical Goods</button>  
+        <button type="submit" name="sector" value="Financials">Financials</button>  
+        <button type="submit" name="sector" value="Healthcare">Healthcare</button>  
+        <button type="submit" name="sector" value="Unknown">Unknown</button>  
+    </form>
     {% if book %}
         {% for key,value in book.items %} 
             <div class="row ticker">
                 <div class = "col-sm-4 text-center"><h3>BIDS</h3></div>
-                <div class="col-sm-4 text-center"><h3>{{key}}</h3></div>
+                <div class="col-sm-4 text-center"><h3>{{key}} [{{value.sector}}]</h3></div>
                 <div class="col-sm-4 text-center"><h3>ASKS</h3></div>
             </div>
             <div class="row">
