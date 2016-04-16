@@ -3,21 +3,23 @@
 
 <body>
 <div class="container-fluid">
+    <div class="row sectors">
     <form action="{% url 'exchange:orderbookall' %}" method="post">
     {% csrf_token %}
-        <button type="submit" name="sector" value="all">All</button>  
-        <button type="submit" name="sector" value="Energy">Energy</button>  
-        <button type="submit" name="sector" value="Telecom">Telecom</button>  
-        <button type="submit" name="sector" value="Utilities">Utilities</button>  
-        <button type="submit" name="sector" value="Technology">Technology</button>  
-        <button type="submit" name="sector" value="Cyclical Goods">Cyclical Goods</button>  
-        <button type="submit" name="sector" value="Basic Materials">Basic Materials</button>  
-        <button type="submit" name="sector" value="Industrials">Industrials</button>  
-        <button type="submit" name="sector" value="NonCyclical Goods">NonCyclical Goods</button>  
-        <button type="submit" name="sector" value="Financials">Financials</button>  
-        <button type="submit" name="sector" value="Healthcare">Healthcare</button>  
-        <button type="submit" name="sector" value="Unknown">Unknown</button>  
+        <button class="btn btn-primary" type="submit" name="sector" value="all">All</button>  
+        <button class="btn btn-primary" type="submit" name="sector" value="Energy">Energy</button>  
+        <button class="btn btn-primary" type="submit" name="sector" value="Telecom">Telecom</button>  
+        <button class="btn btn-primary" type="submit" name="sector" value="Utilities">Utilities</button>  
+        <button class="btn btn-primary" type="submit" name="sector" value="Technology">Technology</button>  
+        <button class="btn btn-primary" type="submit" name="sector" value="Cyclical Goods">Cyclical Goods</button>  
+        <button class="btn btn-primary" type="submit" name="sector" value="Basic Materials">Basic Materials</button>  
+        <button class="btn btn-primary" type="submit" name="sector" value="Industrials">Industrials</button>  
+        <button class="btn btn-primary" type="submit" name="sector" value="NonCyclical Goods">NonCyclical Goods</button>  
+        <button class="btn btn-primary" type="submit" name="sector" value="Financials">Financials</button>  
+        <button class="btn btn-primary" type="submit" name="sector" value="Healthcare">Healthcare</button>  
+        <button class="btn btn-primary" type="submit" name="sector" value="Unknown">Unknown</button>  
     </form>
+    </div>
     {% if book %}
         {% for key,value in book.items %} 
             <div class="row ticker">

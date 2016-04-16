@@ -23,6 +23,10 @@ input[type="radio"] {
     border: none;
     outline: #F19425;
 }
+.sectors{
+    margin-left: 80px;
+    margin-right: 80px;
+}
 .ticker{
     background-color: #ffffff;
     background-image: url("../images/diamond-upholstery.png");
