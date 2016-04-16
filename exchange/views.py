@@ -91,7 +91,7 @@ def order_book(request):
         else:
             securities = Security.objects.filter(sector=sectorpost)
     else: 
-	    securities = Security.objects.all()
+	    securities = Security.objects.all().order_by('-fmv')[:10]
     for sec in securities:
 		bids = Order.objects.filter(order_security=sec,bidask='BID').order_by('-price')
 		asks = Order.objects.filter(order_security=sec,bidask='ASK').order_by('price')
