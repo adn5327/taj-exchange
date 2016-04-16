@@ -31,7 +31,7 @@ class Possessions(models.Model):
 		self.save()
 
 	def updateAvailable(self, amount_change):
-		self.available_amount == amount_change
+		self.available_amount += amount_change
 		self.save()
 
 	def updateBoth(self, amount_change):

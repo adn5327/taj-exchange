@@ -54,7 +54,7 @@ def order(request):
 				if acct_pos and acct_pos[0].available_amount >= o.amount:
 					o.save()
 					setInners(o.order_security)
-					acct_pos.updateAvailable(-o.amount)
+					acct_pos[0].updateAvailable(-o.amount)
 					orderSubmission(o)
 				else:
 					error = 'You don\'t own that amount of that security'

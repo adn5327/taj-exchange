@@ -27,7 +27,8 @@ def updatePosession(account, security, trade_amount, order_type):
 		pos = Possessions(
 			account_id = account,
 			security_id = security,
-			amount = trade_amount)
+			total_amount = trade_amount,
+			available_amount = trade_amount)
 		pos.save()
 	else:
 		pos = pos_list[0]
@@ -39,11 +40,16 @@ def updatePosession(account, security, trade_amount, order_type):
 			pos.updateTotal(trade_amount)
 
 
-def performTrade(ask, bid, aggressor):
+def performTrade(order, potential_order, aggressor):
+
 	if aggressor == 'ASK':
-		trade_price = ask.price
+		trade_price = order.price
+		ask = order
+		bid = potential_order
 	else:
 		trade_price = bid.price
+		ask = potential_order
+		bid = order
 	
 	trade_amount = min(ask.amount, bid.amount)
 	
@@ -57,8 +63,8 @@ def performTrade(ask, bid, aggressor):
 
 	ask.update(trade_amount)
 	bid.update(trade_amount)
-	updatePosession(bid.order_account, bid.order_security, trade_amount) #Bid account possession increases
-	updatePosession(ask.order_account, ask.order_security, -trade_amount) #Ask account possession decreases
+	updatePosession(bid.order_account, bid.order_security, trade_amount, 'BID') #Bid account possession increases
+	updatePosession(ask.order_account, ask.order_security, -trade_amount, 'ASK') #Ask account possession decreases
 
 	total_price = trade_amount * trade_price
 	bid.order_account.updateTotal(-total_price)
