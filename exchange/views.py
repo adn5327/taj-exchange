@@ -51,9 +51,10 @@ def order(request):
 			else:#When it is an ASK
 
 				acct_pos = Possessions.objects.filter(account_id=o.order_account,security_id=o.order_security)
-				if acct_pos and acct_pos[0].amount >= o.amount:
+				if acct_pos and acct_pos[0].available_amount >= o.amount:
 					o.save()
 					setInners(o.order_security)
+					acct_pos.updateAvailable(-o.amount)
 					orderSubmission(o)
 				else:
 					error = 'You don\'t own that amount of that security'

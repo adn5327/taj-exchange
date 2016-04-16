@@ -19,7 +19,7 @@ def setInners(security):
 	
 	security.save()
 
-def updatePosession(account, security, trade_amount):
+def updatePosession(account, security, trade_amount, order_type):
 	if account is None or security is None or trade_amount == 0:
 		return 
 	pos_list = Possessions.objects.filter(account_id=account, security_id=security)
@@ -31,10 +31,12 @@ def updatePosession(account, security, trade_amount):
 		pos.save()
 	else:
 		pos = pos_list[0]
-		if pos.amount + trade_amount == 0:
+		if pos.total_amount + trade_amount == 0:
 			pos.delete()
+		elif order_type == 'BID':
+			pos.updateBoth(trade_amount)
 		else:
-			pos.update(trade_amount)
+			pos.updateTotal(trade_amount)
 
 
 def performTrade(ask, bid, aggressor):

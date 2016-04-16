@@ -21,12 +21,22 @@ class Security(models.Model):
 class Possessions(models.Model):
 	account_id = models.ForeignKey('Account', related_name="pos_account_id", on_delete=models.CASCADE)
 	security_id = models.ForeignKey('Security', related_name="pos_security_id", on_delete=models.CASCADE)
-	amount = models.IntegerField(default=0)
+	available_amount = models.IntegerField(default=0)
+	total_amount = models.IntegerField(default=0)
 	class Meta:
 		unique_together = (('account_id', 'security_id'))
 
-	def update(self, amount_change):
-		self.amount += amount_change
+	def updateTotal(self, amount_change):
+		self.total_amount += amount_change
+		self.save()
+
+	def updateAvailable(self, amount_change):
+		self.available_amount == amount_change
+		self.save()
+
+	def updateBoth(self, amount_change):
+		self.total_amount += amount_change
+		self.available_amount += amount_change
 		self.save()
 
 	def __str__(self):
