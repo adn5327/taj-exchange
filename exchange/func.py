@@ -45,11 +45,11 @@ def performTrade(order, potential_order, aggressor):
 	if aggressor == 'ASK':
 		ask = order
 		bid = potential_order
-		trade_price = ask.price
+		trade_price = bid.price
 	else:
 		ask = potential_order
 		bid = order
-		trade_price = bid.price
+		trade_price = ask.price
 	
 	trade_amount = min(ask.amount, bid.amount)
 	

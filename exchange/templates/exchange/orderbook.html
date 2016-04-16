@@ -24,7 +24,7 @@
         {% for key,value in book.items %} 
             <div class="row ticker">
                 <div class = "col-sm-4 text-center"><h3>BIDS</h3></div>
-                <div class="col-sm-4 text-center"><h3>{{key}} [{{value.sector}}]</h3></div>
+                <div class="col-sm-4 text-center"><h3>{{key}} - ${{value.fmv}} [{{value.sector}}]</h3></div>
                 <div class="col-sm-4 text-center"><h3>ASKS</h3></div>
             </div>
             <div class="row">
