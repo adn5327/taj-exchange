@@ -15,6 +15,10 @@ class Security(models.Model):
 	security_accounts = models.ManyToManyField('Account', blank=True)
 	#inner_bid, inner_ask, and fmv come from orders db
 
+	def updateFMV(self, new_fmv):
+		self.fmv = new_fmv
+		self.save()
+
 	def __str__(self):
 		return self.symbol
 

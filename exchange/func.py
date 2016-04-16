@@ -43,13 +43,13 @@ def updatePosession(account, security, trade_amount, order_type):
 def performTrade(order, potential_order, aggressor):
 
 	if aggressor == 'ASK':
-		trade_price = order.price
 		ask = order
 		bid = potential_order
+		trade_price = ask.price
 	else:
-		trade_price = bid.price
 		ask = potential_order
 		bid = order
+		trade_price = bid.price
 	
 	trade_amount = min(ask.amount, bid.amount)
 	
@@ -69,6 +69,7 @@ def performTrade(order, potential_order, aggressor):
 	total_price = trade_amount * trade_price
 	bid.order_account.updateTotal(-total_price)
 	ask.order_account.updateBoth(total_price, total_price)
+	bid.order_security.updateFMV(trade_price)
 
 	trade.save()
 

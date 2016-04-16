@@ -110,10 +110,13 @@ def delete_order(request):
 			order = Order.objects.get(id=order_id)
 			order.delete()
 			setInners(order.order_security)
-			account = Account.objects.get(user=request.user)
+			
 			if order.bidask == 'BID':
-				account.available_funds += order.price*order.amount
-				account.save()
+				account = Account.objects.get(user=request.user)
+				account.updateAvailable(order.price*order.amount)
+			else:
+				pos = Possessions.objects.filter(account_id=order.order_account, security_id=order.order_security)[0]
+				pos.updateAvailable(order.amount)
 
 		return closeAndRedirect('exchange:index')
 	else:
