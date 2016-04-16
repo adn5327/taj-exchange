@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 class Security(models.Model):
 	symbol = models.CharField(primary_key=True,max_length=5)
+	sector = models.CharField(default='Unknown',max_length=25)
 	volume = models.IntegerField(default=0)
 	inner_bid = models.IntegerField(default=0)
 	inner_ask = models.IntegerField(default=0)
