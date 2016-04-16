@@ -40,7 +40,9 @@ class Possessions(models.Model):
 		self.save()
 
 	def __str__(self):
-		return self.security_id.symbol + ': ' + str(self.amount) + ' shares'
+		return self.security_id.symbol + ': Available shares = ' \
+			+ str(self.available_amount) + ' Total shares = ' \
+			+ str(self.total_amount) + ' shares'
 
 
 class Trade(models.Model):
