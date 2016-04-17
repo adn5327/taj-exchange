@@ -5,6 +5,10 @@ percent_modification = .25
 risk_change = 1
 len2 = [.50,.50]
 len3 = [.50,.25,.25]
+sec_list = ['Technology', 'Financials', 'Energy',
+            'Healthcare', 'Telecom', 'Cyclical Goods',
+            'Industrials', 'NonCyclical Goods', 
+            'Utilities', 'Basic Materials']
 len_map = {
 		1 : [1],
 		2 : [.50,.50],
@@ -39,25 +43,6 @@ def calculate_current_risk(account):
     risk = (float(risk) / float(total_possessions))*10
     return risk, total_possessions
 
-def computeStrategy(depth, sectors, risk, target, total_possessions):
-    if depth == 0:
-        return sectors
-
-    for sector in risk_map:
-        amount = total_possessions * percent_modification
-        potential_risk = risk + (amount * risk_map[sector])
-        potential_risk = (float(potential_risk) / float(total_possessions+amount)) * 10
-        sectors.append()
-
-
-
-    raw_risk = float(risk / 10)*total_possessions
-
-
-def aggressive(risk, total_possessions):
-    target_high = risk + risk_change
-    target_low = risk - risk_change
-
 def update_risk(current_risk, sectors):
 	cur_risk_adjusted = (1-percent_modification)*current_risk
 	lensec = len(sectors)
@@ -71,12 +56,42 @@ def update_risk(current_risk, sectors):
 		cur_risk_adjusted += percent_modification*10*len_map[lensec][i]*risk_map[cur_sec]
 	return cur_risk_adjusted
 
-def aggressive():
-    return computeStrategy()
-    pass
+def recommend(risk, strategy):
+    target_high = risk + risk_change
+    target_low = risk - risk_change
+    prev_sector_high = (None, 10)
+    prev_sector_low = (None, 10)
+    for i in range(len(sec_list)):
+        cur_list = list()
+        cur_list.append(sec_list[i])    
+        if strategy != 'Aggressive':
+            for j in range(i+1, len(sec_list)):
+                cur_list.append(sec_list[j])
+                if strategy != 'Moderate':
+                    for k in range(j+1, len(sec_list)):
+                        cur_list.append(sec_list[k])
 
-def moderate():
-    pass
+        potential = update_risk(risk, cur_list)
+        delta_high = abs(target_high - potential)
+        delta_low = abs(target_low - potential)
+        prev_sector_low = checkIfBetter(prev_sector_low, delta_low, cur_list)
+        prev_sector_high = checkIfBetter(prev_sector_high, delta_high, cur_list)
+
+    return prev_sector_low, prev_sector_high
+                
+def aggressive(risk):
+    return recommend(risk, 'Aggressive')
+
+def moderate(risk):
+    return recommend(risk, 'Moderate')
 
 def safe():
-    pass
+    return recommend(risk, 'Safe')
+
+def checkIfBetter(curr_best, new_delta, new_list):
+    if new_delta < curr_best[1]:
+        return (new_list, new_delta)
+    else:
+        return curr_best
+
+
