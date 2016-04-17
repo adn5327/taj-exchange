@@ -240,7 +240,7 @@ def view_account(request):
 
 def view_security(request, symbol):
 	security = Security.objects.get(symbol=symbol)
-	trades = Trade.objects.filter(security_id=security)[:10]
+	trades = Trade.objects.filter(security_id=security).order_by('-date_time')[:10]
 	context = {
 		'security':security,
 		'trades':trades,
