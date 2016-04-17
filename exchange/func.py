@@ -114,6 +114,8 @@ def orderSubmission(order):
 		# 	or if we have no more potential orders quit trading
 
 		continue_trading = orderMatch(order, curr_order) and (order_idx < len(orders))
+		# if continue_trading:
+		setInners(order.order_security)
 
 def closeAndRedirect(url):
 	print len(connection.queries)
