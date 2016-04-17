@@ -241,7 +241,12 @@ def view_account(request):
 		'possessions':possessions,
 		'user':request.user
 	}
-	print calculate_current_risk(account)
+	risk, total_shares = calculate_current_risk(account)
+	print "Risk = " + str(risk)
+	print "Aggressive = " + str(aggressive(risk))
+	print "Moderate = " + str(moderate(risk))
+	print "Safe = " + str(safe(risk))
+
 	return closeAndRender(request, 'exchange/view_account.html',context) 
 
 def view_security(request, symbol):

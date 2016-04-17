@@ -49,26 +49,36 @@ def update_risk(current_risk, sectors):
 		cur_risk_adjusted += percent_modification*10*len_map[lensec][i]*risk_map[cur_sec]
 	return cur_risk_adjusted
 
+
+def getDeltaUpdate(risk, cur_list, low, high):
+    target_high = risk + risk_change
+    target_low = risk - risk_change
+    potential = update_risk(risk, cur_list)
+    delta_high = abs(target_high - potential)
+    delta_low = abs(target_low - potential)
+    low = checkIfBetter(low, delta_low, cur_list)
+    high = checkIfBetter(high, delta_high, cur_list)
+    return low, high
+
+
 def recommend(risk, strategy):
     target_high = risk + risk_change
     target_low = risk - risk_change
     prev_sector_high = (None, 10)
     prev_sector_low = (None, 10)
     for i in range(len(sec_list)):
-        cur_list = list()
-        cur_list.append(sec_list[i])    
-        if strategy != 'Aggressive':
+        if strategy == 'Aggressive':
+            cur_list = [sec_list[i]]
+            prev_sector_low, prev_sector_high = getDeltaUpdate(risk, cur_list, prev_sector_low, prev_sector_high)
+        else:
             for j in range(i+1, len(sec_list)):
-                cur_list.append(sec_list[j])
-                if strategy != 'Moderate':
+                if strategy == 'Moderate':
+                    cur_list = [sec_list[i], sec_list[j]]
+                    prev_sector_low, prev_sector_high = getDeltaUpdate(risk, cur_list, prev_sector_low, prev_sector_high)
+                else:
                     for k in range(j+1, len(sec_list)):
-                        cur_list.append(sec_list[k])
-
-        potential = update_risk(risk, cur_list)
-        delta_high = abs(target_high - potential)
-        delta_low = abs(target_low - potential)
-        prev_sector_low = checkIfBetter(prev_sector_low, delta_low, cur_list)
-        prev_sector_high = checkIfBetter(prev_sector_high, delta_high, cur_list)
+                        cur_list = [sec_list[i], sec_list[j], sec_list[k]]
+                        prev_sector_low, prev_sector_high = getDeltaUpdate(risk, cur_list, prev_sector_low, prev_sector_high)
 
     return prev_sector_low, prev_sector_high
                 
