@@ -1,3 +1,5 @@
+from .models import *
+
 risk_map = {
             'Technology': .85,
             'Financials': .77,
@@ -12,7 +14,13 @@ risk_map = {
             }
 
 def calculate_current_risk(account):
-    pass
+    account_possessions = Possessions.objects.filter(account_id=account)
+    risk = 0
+    for possession in account_possessions:
+        pos_risk = possession.total_amount * risk_map[possession.security_id.sector]
+        risk += pos_risk
+    risk = risk*10
+    return risk
 
 def aggressive():
     pass
