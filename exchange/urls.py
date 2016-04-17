@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^order/$', views.order, name='order'),
     url(r'^order/submit/$', views.order, name='submit'),
     url(r'^orderbook/all/$', views.order_book, name='orderbookall'),
+    url(r'^orderbook/(?P<symbol>[-\w]+)/$', views.view_security, name='viewsecurity'),
     url(r'^deleteorder/$', views.delete_order, name='deleteorder'),
 
     url(r'^account/create/', views.create_account, name='createaccount'),

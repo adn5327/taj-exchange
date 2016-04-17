@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 
 from .forms import OrderForm, CreateAccountForm, UpdateAccountForm, LoginAccountForm
 
-from .models import Order, Security, Account, Possessions
+from .models import Order, Security, Account, Possessions,Trade
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -238,3 +238,12 @@ def view_account(request):
 	
 	return closeAndRender(request, 'exchange/view_account.html',context) 
 
+def view_security(request, symbol):
+	security = Security.objects.get(symbol=symbol)
+	trades = Trade.objects.filter(security_id=security)[:10]
+	context = {
+		'security':security,
+		'trades':trades,
+	}
+
+	return closeAndRender(request, 'exchange/view_security.html', context)

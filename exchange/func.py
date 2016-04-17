@@ -4,6 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Order, Security, Account, Trade, Possessions
 from django.shortcuts import render
 from django.db import connection
+from django.utils import timezone
+
 
 def setInners(security):
 	ask_orders = Order.objects.filter(order_security=security,bidask='ASK').order_by('price')
@@ -53,12 +55,15 @@ def performTrade(order, potential_order, aggressor):
 	
 	trade_amount = min(ask.amount, bid.amount)
 	
+	date_time = timezone.now()
+	
 	trade = Trade(
 		bid_account = bid.order_account,
 		ask_account = ask.order_account,
 		security_id = ask.order_security,
 		price = trade_price,
-		amount = int(trade_amount)
+		amount = int(trade_amount),
+		date_time = date_time,
 		)
 
 	ask.update(trade_amount)

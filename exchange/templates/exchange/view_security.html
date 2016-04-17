@@ -1,0 +1,20 @@
+{% load staticfiles %}
+{% include "exchange/base.html" %}
+
+<body>
+    <div class="container-fluid">
+	    <div class="row left-padded">
+	    	<h2>{{security.symbol}} - {{security.name}} [{{security.sector}}]</h2>
+	    	<p>FMV - {{security.fmv}}</p>
+	    	<p>Inner Bid - {{security.inner_bid}}</p>
+	    	<p>Inner Ask - {{security.inner_ask}}</p>
+	    	<br>
+	    	<h2>Last 10 Trades</h2>
+	    	{% if trades %}
+	    	{% for trade in trades %}
+	    	<p>{{trade.date_time}} Price: {{trade.price}}</p>
+	    	{% endfor %}
+	    	{% endif %}
+	    </div>
+    </div>
+</body>
