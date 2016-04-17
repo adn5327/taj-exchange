@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from .func import orderSubmission, setInners, closeAndRender, closeAndRedirect
-
+from .sector_rec import *
 
 def index(request):
 
@@ -235,7 +235,7 @@ def view_account(request):
 		'possessions':possessions,
 		'user':request.user
 	}
-	
+	print calculate_current_risk(account)
 	return closeAndRender(request, 'exchange/view_account.html',context) 
 
 def view_security(request, symbol):

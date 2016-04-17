@@ -16,10 +16,13 @@ risk_map = {
 def calculate_current_risk(account):
     account_possessions = Possessions.objects.filter(account_id=account)
     risk = 0
+    total_possessions = 0
     for possession in account_possessions:
         pos_risk = possession.total_amount * risk_map[possession.security_id.sector]
+        total_possessions += possession.total_amount
         risk += pos_risk
-    risk = risk*10
+    # risk = risk * 10
+    risk = (float(risk) / float(total_possessions))*10
     return risk
 
 def aggressive():
