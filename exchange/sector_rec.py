@@ -27,6 +27,8 @@ risk_map = {
 
 def calculate_current_risk(account):
     account_possessions = Possessions.objects.filter(account_id=account)
+    if len(account_possessions) == 0:
+        return 0, 0
     risk = 0
     total_possessions = 0
     for possession in account_possessions:
