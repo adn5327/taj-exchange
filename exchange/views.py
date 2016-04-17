@@ -252,20 +252,31 @@ def view_account(request):
 def view_security(request, symbol):
 	security = Security.objects.get(symbol=symbol)
 	trades = Trade.objects.filter(security_id=security).order_by('-date_time')[:10]
-	account = Account.objects.get(user=request.user)
-	orders = Order.objects.filter(order_security=security)
-	possessions = Possessions.objects.filter(account_id=account, security_id=security)
-	bidform = OrderForm(initial={'bidask':"BID",'order_security':security})
-	askform = OrderForm(initial={'bidask':"ASK",'order_security':security})
-	context = {
-		'security':security,
-		'trades':trades,
-		'account':account,
-		'orders':orders,
-		'possessions':possessions,
-		'user':request.user,
-		'bidform':bidform,
-		'askform':askform,
-	}
+	bids = Order.objects.filter(order_security=security,bidask='BID').order_by('-price')
+	asks = Order.objects.filter(order_security=security,bidask='ASK').order_by('price')	
+	if request.user.is_authenticated():
+		account = Account.objects.get(user=request.user)
+		possessions = Possessions.objects.filter(account_id=account, security_id=security)
+		bidform = OrderForm(initial={'bidask':"BID",'order_security':security})
+		askform = OrderForm(initial={'bidask':"ASK",'order_security':security})
+		context = {
+			'security':security,
+			'trades':trades,
+			'account':account,
+			'bids':bids,
+			'asks':asks,
+			'possessions':possessions,
+			'user':request.user,
+			'bidform':bidform,
+			'askform':askform,
+		}
+	else:
+		context = {
+			'security':security,
+			'trades':trades,
+			'bids':bids,
+			'asks':asks,
+			'user':request.user,
+		}
 
 	return closeAndRender(request, 'exchange/view_security.html', context)

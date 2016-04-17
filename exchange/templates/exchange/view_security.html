@@ -60,25 +60,21 @@
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    {% for each_bid in orders %}
-                    	{% if each_bid.bidask == "BID" %}
+                    {% for each_bid in bids %}
                         {% if each_bid.order_account.user == user %}
                         <p style="color:#FFe0e0">{{each_bid}}</p>
                         {% else%}
                         <p>{{each_bid}}</p>
                         {% endif %}
-                        {% endif %}
                     {% endfor %}
                 </div>
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
-                    {% for each_ask in orders %}
-                    	{% if each_ask.bidask == "ASK" %}
+                    {% for each_ask in asks %}
                         {% if each_ask.order_account.user == user %}
                         <p style="color:#FFe0e0">{{each_ask}}</p>
                         {% else%}
                         <p>{{each_ask}}</p>
-                        {% endif %}
                         {% endif %}
                     {% endfor %}
                 </div>
