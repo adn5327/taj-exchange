@@ -88,6 +88,13 @@ def order_book(request):
         sectorpost = request.POST['sector']
         if sectorpost == 'all':
             securities = Security.objects.all()
+        elif sectorpost == 'yours':
+            account = Account.objects.get(user=request.user)
+            pos = Possessions.objects.filter(account_id=account)
+            secs = []
+            for p in pos:
+                secs.append(p.security_id.symbol)
+            securities = Security.objects.filter(symbol__in=secs) 
         else:
             securities = Security.objects.filter(sector=sectorpost)
     else: 

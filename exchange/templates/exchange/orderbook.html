@@ -7,6 +7,9 @@
     <form action="{% url 'exchange:orderbookall' %}" method="post">
     {% csrf_token %}
         <button class="btn btn-primary" type="submit" name="sector" value="all">All</button>  
+        {% if user.is_authenticated %}
+        <button class="btn btn-primary" type="submit" name="sector" value="yours">Yours</button>  
+        {% endif %}
         <button class="btn btn-primary" type="submit" name="sector" value="Energy">Energy</button>  
         <button class="btn btn-primary" type="submit" name="sector" value="Telecom">Telecom</button>  
         <button class="btn btn-primary" type="submit" name="sector" value="Utilities">Utilities</button>  
