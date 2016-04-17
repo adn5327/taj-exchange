@@ -56,8 +56,8 @@ def getDeltaUpdate(risk, cur_list, low, high):
     potential = update_risk(risk, cur_list)
     delta_high = abs(target_high - potential)
     delta_low = abs(target_low - potential)
-    low = checkIfBetter(low, delta_low, cur_list)
-    high = checkIfBetter(high, delta_high, cur_list)
+    low = checkIfBetter(low, delta_low, cur_list, potential)
+    high = checkIfBetter(high, delta_high, cur_list, potential)
     return low, high
 
 
@@ -91,9 +91,9 @@ def moderate(risk):
 def safe(risk):
     return recommend(risk, 'Safe')
 
-def checkIfBetter(curr_best, new_delta, new_list):
+def checkIfBetter(curr_best, new_delta, new_list, new_risk):
     if new_delta < curr_best[1]:
-        return (new_list, new_delta)
+        return (new_list, new_delta, new_risk)
     else:
         return curr_best
 
