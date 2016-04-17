@@ -85,7 +85,7 @@ def aggressive(risk):
 def moderate(risk):
     return recommend(risk, 'Moderate')
 
-def safe():
+def safe(risk):
     return recommend(risk, 'Safe')
 
 def checkIfBetter(curr_best, new_delta, new_list):
