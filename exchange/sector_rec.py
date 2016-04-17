@@ -37,8 +37,23 @@ def calculate_current_risk(account):
     risk = (float(risk) / float(total_possessions))*10
     return risk, total_possessions
 
-def computeStrategy(depth, risk, total_possessions):
-    raw_risk = risk / 10 
+def computeStrategy(depth, sectors, risk, target, total_possessions):
+    if depth == 0:
+        return sectors
+
+    for sector in risk_map:
+        amount = total_possessions * percent_modification
+        potential_risk = risk + (amount * risk_map[sector])
+        potential_risk = (float(potential_risk) / float(total_possessions+amount)) * 10
+        sectors.append()
+
+
+    raw_risk = float(risk / 10)*total_possessions
+
+
+def aggressive(risk, total_possessions):
+    target_high = risk + risk_change
+    target_low = risk - risk_change
 
 def update_risk(current_risk, sectors):
 	cur_risk_adjusted = (1-percent_modification)*current_risk
