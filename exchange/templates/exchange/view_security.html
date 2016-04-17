@@ -3,18 +3,86 @@
 
 <body>
     <div class="container-fluid">
-	    <div class="row left-padded">
-	    	<h2>{{security.symbol}} [{{security.sector}}]</h2>
-	    	<p>FMV - {{security.fmv}}</p>
-	    	<p>Inner Bid - {{security.inner_bid}}</p>
-	    	<p>Inner Ask - {{security.inner_ask}}</p>
+	    <div class="text-center">
+	    	<div class="row ticker">
+		    	<h2>{{security.symbol}} [{{security.sector}}]</h2>
+		    </div>
+	    	<p><strong>FMV</strong> - {{security.fmv}}</p>
+	    	<p><strong>Inner Bid</strong> - {{security.inner_bid}}</p>
+	    	<p><strong>Inner Ask</strong> - {{security.inner_ask}}</p>
+	    	{% if user.is_authenticated %}
+	    	<div class="row">
+		   		<div class="col-md-4" id="bidform">
+			        <form action="/order/submit/" method="post">
+			        {% csrf_token %}
+			        <h2>Bid</h2>
+		            <p>Price {{bidform.price}}</p>
+		            <p>Amount {{bidform.amount}}</p>
+		            <p style="display:none">{{bidform.bidask}}</p>
+		            <p style="display:none">{{bidform.order_security}}</p>
+		            <button class="btn btn-primary"/>Submit</button>
+	        		</form>
+		        </div>
+		        <div class="col-md-4">
+			    	<h2>Last 10 Trades</h2>
+			    	{% if trades %}
+			    	{% for trade in trades %}
+			    	<p>{{trade.date_time}} Price: {{trade.price}}</p>
+			    	{% endfor %}
+			    	{% endif %}
+			    	<br>
+		    	</div>
+		   		<div class="col-md-4" id="askform">
+			        <form action="/order/submit/" method="post">
+			        {% csrf_token %}
+			        <h2>Ask</h2>
+			        {% if possessions %}
+			        {% for pos in possessions %}
+		            <p>You have {{pos.available_amount}} shares available out of a total of {{pos.total_amount}} shares</p>
+		            {% endfor %}
+		            <p>Price {{askform.price}}</p>
+		            <p>Amount {{askform.amount}}</p>
+		            <p style="display:none">{{askform.bidask}}</p>
+		            <p style="display:none">{{askform.order_security}}</p>
+		            <button class="btn btn-primary"/>Submit</button>
+		            {% else %}
+					<p>You have 0 shares available out of a total of 0 shares</p>		     
+					{% endif %}
+		            </form>
+		        </div>
+		    </div>
+	   		{% endif %}
 	    	<br>
-	    	<h2>Last 10 Trades</h2>
-	    	{% if trades %}
-	    	{% for trade in trades %}
-	    	<p>{{trade.date_time}} Price: {{trade.price}}</p>
-	    	{% endfor %}
-	    	{% endif %}
+	    	<div class="row ticker">
+                <div class="col-sm-4 text-center"><h3>BIDS</h3></div>
+                <div class="col-sm-4 text-center"><h3>Current Orderbook</h3></div>
+                <div class="col-sm-4 text-center"><h3>ASKS</h3></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    {% for each_bid in orders %}
+                    	{% if each_bid.bidask == "BID" %}
+                        {% if each_bid.order_account.user == user %}
+                        <p style="color:#FFe0e0">{{each_bid}}</p>
+                        {% else%}
+                        <p>{{each_bid}}</p>
+                        {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    {% for each_ask in orders %}
+                    	{% if each_ask.bidask == "ASK" %}
+                        {% if each_ask.order_account.user == user %}
+                        <p style="color:#FFe0e0">{{each_ask}}</p>
+                        {% else%}
+                        <p>{{each_ask}}</p>
+                        {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div> 
 	    </div>
     </div>
 </body>

@@ -27,11 +27,11 @@ def order(request):
 			start_time = timezone.now()
 			account = Account.objects.get(user=request.user)
 			o = Order(start_time=start_time,
-				order_type=f['order_type'],
+				order_type="Limit",
 				bidask=f['bidask'],
 				price=f['price'],
 				amount=f['amount'],
-				order_security=f['order_security'][0],
+				order_security=f['order_security'],
 				order_account=account)
 			error=None
 			if o.amount < 1 or o.price < 1:
@@ -225,7 +225,6 @@ def update_account(request):
 
 
 def view_account(request):
-
 	account = Account.objects.get(user=request.user)
 	orders = Order.objects.filter(order_account=account)
 	possessions = Possessions.objects.filter(account_id=account)
@@ -241,9 +240,20 @@ def view_account(request):
 def view_security(request, symbol):
 	security = Security.objects.get(symbol=symbol)
 	trades = Trade.objects.filter(security_id=security).order_by('-date_time')[:10]
+	account = Account.objects.get(user=request.user)
+	orders = Order.objects.filter(order_security=security)
+	possessions = Possessions.objects.filter(account_id=account, security_id=security)
+	bidform = OrderForm(initial={'bidask':"BID",'order_security':security})
+	askform = OrderForm(initial={'bidask':"ASK",'order_security':security})
 	context = {
 		'security':security,
 		'trades':trades,
+		'account':account,
+		'orders':orders,
+		'possessions':possessions,
+		'user':request.user,
+		'bidform':bidform,
+		'askform':askform,
 	}
 
 	return closeAndRender(request, 'exchange/view_security.html', context)
