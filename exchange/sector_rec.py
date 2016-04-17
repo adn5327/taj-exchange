@@ -3,8 +3,6 @@ from .models import *
 
 percent_modification = .25
 risk_change = 1
-len2 = [.50,.50]
-len3 = [.50,.25,.25]
 sec_list = ['Technology', 'Financials', 'Energy',
             'Healthcare', 'Telecom', 'Cyclical Goods',
             'Industrials', 'NonCyclical Goods', 
@@ -46,11 +44,6 @@ def calculate_current_risk(account):
 def update_risk(current_risk, sectors):
 	cur_risk_adjusted = (1-percent_modification)*current_risk
 	lensec = len(sectors)
-	'''
-	if lensec == 1:
-		cur_sec = sectors[0]
-		return cur_risk_adjusted + percent_modification*10*risk_map[cur_sec]
-	'''
 	for i in range(lensec):
 		cur_sec = sectors[i]
 		cur_risk_adjusted += percent_modification*10*len_map[lensec][i]*risk_map[cur_sec]
