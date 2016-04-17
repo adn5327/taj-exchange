@@ -50,6 +50,7 @@ def computeStrategy(depth, sectors, risk, target, total_possessions):
         sectors.append()
 
 
+
     raw_risk = float(risk / 10)*total_possessions
 
 
