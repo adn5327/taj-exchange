@@ -3,18 +3,18 @@ from __future__ import unicode_literals
 from django.db import models
 
 from django.contrib.auth.models import User
+from django.utils import timezone
+
 
 class Security(models.Model):
 	symbol = models.CharField(primary_key=True,max_length=5)
 	sector = models.CharField(default='Unknown',max_length=25)
+	name = models.CharField(default='NameGoesHere',max_length=25)
 	volume = models.IntegerField(default=0)
 	inner_bid = models.IntegerField(default=0)
 	inner_ask = models.IntegerField(default=0)
 	fmv = models.IntegerField(default=0)
-	security_orders = models.ManyToManyField('Order', blank=True)
-	security_accounts = models.ManyToManyField('Account', blank=True)
-	#inner_bid, inner_ask, and fmv come from orders db
-
+	
 	def updateFMV(self, new_fmv):
 		self.fmv = new_fmv
 		self.save()
@@ -56,6 +56,8 @@ class Trade(models.Model):
 	security_id = models.ForeignKey('Security', related_name="trade_security_id", on_delete=models.DO_NOTHING)
 	price = models.IntegerField(default=0)
 	amount = models.IntegerField(default=0)
+	date_time = models.DateTimeField()
+
 
 	def __str__(self):
 		return str(self.trade_id) + ': ' + str(self.security_id) + ', ' + str(self.price) + ', ' + str(self.amount)	
@@ -68,8 +70,6 @@ class Order(models.Model):
 	amount = models.IntegerField(default=0)
 	order_security = models.ForeignKey('Security', on_delete=models.CASCADE)
 	order_account = models.ForeignKey('Account', on_delete=models.CASCADE)
-	#NEED  'TRADE' RELATIONSHIP WITH ORDER
-	#need to update order_type,
 
 	def update(self, amount_change):
 		if self.amount >= amount_change:
@@ -81,15 +81,13 @@ class Order(models.Model):
 
 
 	def __str__(self):
-		return str(self.id)+': '+self.bidask+' on ' + str(self.order_security) +' : '+str(self.amount)+' at '+str(self.price)
+		return str(self.id)+': '+self.bidask+' on ' + str(self.order_security) +' : '+str(self.amount)+' at $'+str(self.price)
 
 class Account(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	total_funds = models.IntegerField(default=0)
 	available_funds = models.IntegerField(default=0)
 	SSN = models.IntegerField(default=0)
-	#account_securities = models.ManyToManyField('Possessions', blank=True)
-	#account_orders = models.ManyToManyField('Order', blank=True)
 
 	def updateTotal(self, change_in_funds):
 		self.total_funds += change_in_funds

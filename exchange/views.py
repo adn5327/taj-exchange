@@ -6,13 +6,13 @@ from django.core.urlresolvers import reverse
 
 from .forms import OrderForm, CreateAccountForm, UpdateAccountForm, LoginAccountForm
 
-from .models import Order, Security, Account, Possessions
+from .models import Order, Security, Account, Possessions,Trade
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from .func import orderSubmission, setInners, closeAndRender, closeAndRedirect
-
+from . import sector_rec, tajindicator
 
 def index(request):
 
@@ -27,11 +27,11 @@ def order(request):
 			start_time = timezone.now()
 			account = Account.objects.get(user=request.user)
 			o = Order(start_time=start_time,
-				order_type=f['order_type'],
+				order_type="Limit",
 				bidask=f['bidask'],
 				price=f['price'],
 				amount=f['amount'],
-				order_security=f['order_security'][0],
+				order_security=f['order_security'],
 				order_account=account)
 			error=None
 			if o.amount < 1 or o.price < 1:
@@ -88,6 +88,13 @@ def order_book(request):
         sectorpost = request.POST['sector']
         if sectorpost == 'all':
             securities = Security.objects.all()
+        elif sectorpost == 'yours':
+            account = Account.objects.get(user=request.user)
+            pos = Possessions.objects.filter(account_id=account)
+            secs = []
+            for p in pos:
+                secs.append(p.security_id.symbol)
+            securities = Security.objects.filter(symbol__in=secs) 
         else:
             securities = Security.objects.filter(sector=sectorpost)
     else: 
@@ -225,16 +232,60 @@ def update_account(request):
 
 
 def view_account(request):
-
 	account = Account.objects.get(user=request.user)
 	orders = Order.objects.filter(order_account=account)
 	possessions = Possessions.objects.filter(account_id=account)
+
+	risk, total_shares = sector_rec.calculate_current_risk(account)
+	agr_low, agr_high = sector_rec.aggressive(risk, total_shares)
+	mod_low, mod_high = sector_rec.moderate(risk, total_shares)
+	safe_low, safe_high = sector_rec.safe(risk, total_shares)
 	context = {
 		'account':account,
 		'orders':orders,
 		'possessions':possessions,
-		'user':request.user
+		'user':request.user,
+		'risk':risk,
+		'agr_low':agr_low,
+		'agr_high':agr_high,
+		'mod_low':mod_low,
+		'mod_high':mod_high,
+		'safe_low':safe_low,
+		'safe_high':safe_high,
 	}
-	
+
 	return closeAndRender(request, 'exchange/view_account.html',context) 
 
+def view_security(request, symbol):
+	security = Security.objects.get(symbol=symbol)
+	trades = Trade.objects.filter(security_id=security).order_by('-date_time')[:10]
+	bids = Order.objects.filter(order_security=security,bidask='BID').order_by('-price')
+	asks = Order.objects.filter(order_security=security,bidask='ASK').order_by('price')	
+	taj_indicator = tajindicator.calc_taj(symbol)	
+	if request.user.is_authenticated():
+		account = Account.objects.get(user=request.user)
+		possessions = Possessions.objects.filter(account_id=account, security_id=security)
+		bidform = OrderForm(initial={'bidask':"BID",'order_security':security})
+		askform = OrderForm(initial={'bidask':"ASK",'order_security':security})
+		context = {
+			'security':security,
+			'trades':trades,
+			'account':account,
+			'bids':bids,
+			'asks':asks,
+			'possessions':possessions,
+			'user':request.user,
+			'bidform':bidform,
+			'askform':askform,
+			'tajindicator':taj_indicator,
+		}
+	else:
+		context = {
+			'security':security,
+			'trades':trades,
+			'bids':bids,
+			'asks':asks,
+			'user':request.user,
+		}
+
+	return closeAndRender(request, 'exchange/view_security.html', context)

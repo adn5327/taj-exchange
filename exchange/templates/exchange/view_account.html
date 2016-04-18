@@ -27,10 +27,62 @@
 			{% for poss in possessions %}
 			<p>{{poss}}</p>
 			{% endfor %}
+		</div>
+	    <div class="row left-padded">
+	    	<h2>YOUR RECOMMENDATIONS -- Current Risk: {{risk}}</h3>
+            <h3>Aggressive</h4>
+            <h4>Risk Reduction</h4>
+            {% for key,value in agr_low.0.items %} 
+                <p>Buy {{value}} shares from {{key}}.</p>
+            {% empty %}
+                <p> Empty! </p>
+            {% endfor %}
+                <p>This will reduce your risk to {{agr_low.1}}.</p>
+            <h4>Risk Increase</h4>
+            {% for key,value in agr_high.0.items %} 
+                <p>Buy {{value}} shares from {{key}}.</p>
+            {% empty %}
+                <p> Empty! </p>
+            {% endfor %}
+                <p>This will increase your risk to {{agr_high.1}}.</p>
+            <br><br>
+            <h4>Moderate</h4>
+            <h4>Risk Reduction</h4>
+            {% for key,value in mod_low.0.items %} 
+                <p>Buy {{value}} shares from {{key}}.</p>
+            {% empty %}
+                <p> Empty! </p>
+            {% endfor %}
+                <p>This will reduce your risk to {{mod_low.1}}.</p>
+            <h4>Risk Increase</h4>
+            {% for key,value in mod_high.0.items %} 
+                <p>Buy {{value}} shares from {{key}}.</p>
+            {% empty %}
+                <p> Empty! </p>
+            {% endfor %}
+                <p>This will increase your risk to {{mod_high.1}}.</p>
+            <br><br>
+            <h4>Safe</h4>
+            <h4>Risk Reduction</h4>
+            {% for key,value in safe_low.0.items %} 
+                <p>Buy {{value}} shares from {{key}}.</p>
+            {% empty %}
+                <p> Empty! </p>
+            {% endfor %}
+                <p>This will reduce your risk to {{safe_low.1}}.</p>
+            <h4>Risk Increase</h4>
+            {% for key,value in safe_high.0.items %} 
+                <p>Buy {{value}} shares from {{key}}.</p>
+            {% empty %}
+                <p> Empty! </p>
+            {% endfor %}
+                <p>This will increase your risk to {{safe_high.1}}.</p>
+            <br><br>
+	    	<br>
+	    </div>
 			{% else %}
 			<p>You have no securities</p>
 			{% endif %}
-		</div>
     </div>
 	{% else %}
 	<div>
