@@ -3,6 +3,11 @@ from .models import *
 
 def calc_taj(sec_symbol):
 	cur_security = Security.objects.get(symbol=sec_symbol)
+	avg = voting_avg(cur_security)
+	big_fish = top_orders(cur_security)
+	combined = .66*avg + .34*big_fish
+	sector_mutliplier = 1/(sector_rec.risk_map[cur_security.sector] + .5)
+	return sector_multiplier * combined
 
 def voting_avg(cur_security):
 	weight_avg = weighted_average(cur_security)
