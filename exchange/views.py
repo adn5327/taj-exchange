@@ -237,19 +237,9 @@ def view_account(request):
 	possessions = Possessions.objects.filter(account_id=account)
 
 	risk, total_shares = sector_rec.calculate_current_risk(account)
-	print "Risk = " + str(risk)
 	agr_low, agr_high = sector_rec.aggressive(risk, total_shares)
 	mod_low, mod_high = sector_rec.moderate(risk, total_shares)
 	safe_low, safe_high = sector_rec.safe(risk, total_shares)
-	print 'Aggressive'
-	print str(agr_low)
-	print str(agr_high)
-	print 'Moderate'
-	print str(mod_low)
-	print str(mod_high)
-	print 'Safe'
-	print str(safe_low)
-	print str(safe_high),
 	context = {
 		'account':account,
 		'orders':orders,
