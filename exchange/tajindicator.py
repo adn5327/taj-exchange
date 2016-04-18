@@ -28,17 +28,14 @@ def top_orders(cur_security):
 	if len(top) <3:
 		return 0
 	top_sum = top.aggregate(total_sum=Sum('amount'))
-	total_pd = 0
-	bids = 0
-	asks = 0
+	ret = 0.0
 	for each_top in top:
 		weight = each_top.amount/top_sum['total_sum']
-		percent_diff = (each_top.price-cur_security.fmv)/cur_security.fmv
-		total_pd = total_pd + weight*percent_diff
 		if each_top.bidask == "BID":
-			bids += 1
+			ret += weight
 		else:
-			asks += 1
+			ret -= weight
+	return ret
 	
 
 
