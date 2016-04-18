@@ -62,6 +62,8 @@ def getDeltaUpdate(risk, cur_list, low, high):
 
 
 def recommend(risk, total_shares, strategy):
+    if risk == 0:
+        return
     target_high = risk + risk_change
     target_low = risk - risk_change
     prev_sector_high = (None, 10)
