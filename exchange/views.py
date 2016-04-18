@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from .func import orderSubmission, setInners, closeAndRender, closeAndRedirect
-from .sector_rec import *
+from . import sector_rec
 
 def index(request):
 
@@ -235,17 +235,34 @@ def view_account(request):
 	account = Account.objects.get(user=request.user)
 	orders = Order.objects.filter(order_account=account)
 	possessions = Possessions.objects.filter(account_id=account)
+
+	risk, total_shares = sector_rec.calculate_current_risk(account)
+	print "Risk = " + str(risk)
+	agr_low, agr_high = sector_rec.aggressive(risk, total_shares)
+	mod_low, mod_high = sector_rec.moderate(risk, total_shares)
+	safe_low, safe_high = sector_rec.safe(risk, total_shares)
+	print 'Aggressive'
+	print str(agr_low)
+	print str(agr_high)
+	print 'Moderate'
+	print str(mod_low)
+	print str(mod_high)
+	print 'Safe'
+	print str(safe_low)
+	print str(safe_high),
 	context = {
 		'account':account,
 		'orders':orders,
 		'possessions':possessions,
-		'user':request.user
+		'user':request.user,
+		'risk':risk,
+		'agr_low':agr_low,
+		'agr_high':agr_high,
+		'mod_low':mod_low,
+		'mod_high':mod_high,
+		'safe_low':safe_low,
+		'safe_high':safe_high,
 	}
-	risk, total_shares = calculate_current_risk(account)
-	print "Risk = " + str(risk)
-	print "Aggressive = " + str(aggressive(risk))
-	print "Moderate = " + str(moderate(risk))
-	print "Safe = " + str(safe(risk))
 
 	return closeAndRender(request, 'exchange/view_account.html',context) 
 

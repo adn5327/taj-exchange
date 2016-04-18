@@ -61,7 +61,7 @@ def getDeltaUpdate(risk, cur_list, low, high):
     return low, high
 
 
-def recommend(risk, strategy):
+def recommend(risk, total_shares, strategy):
     target_high = risk + risk_change
     target_low = risk - risk_change
     prev_sector_high = (None, 10)
@@ -82,14 +82,23 @@ def recommend(risk, strategy):
 
     return prev_sector_low, prev_sector_high
                 
-def aggressive(risk):
-    return recommend(risk, 'Aggressive')
+def wrapper(prev_sector_low, total_shares=1000):
+	low_list = prev_sector_low[0]
+	low_risk = prev_sector_low[2]
+	low_dict = {}
+	lenlist = len(low_list)
+	for i in range(lenlist):
+		low_dict[low_list[i]] = percent_modification*len_map[lenlist][i]*total_shares
+	return low_dict, low_risk
 
-def moderate(risk):
-    return recommend(risk, 'Moderate')
+def aggressive(risk, total_shares):
+    return recommend(risk, total_shares, 'Aggressive')
 
-def safe(risk):
-    return recommend(risk, 'Safe')
+def moderate(risk, total_shares):
+    return recommend(risk, total_shares, 'Moderate')
+
+def safe(risk, total_shares):
+    return recommend(risk, total_shares,'Safe')
 
 def checkIfBetter(curr_best, new_delta, new_list, new_risk):
     if new_delta < curr_best[1]:
