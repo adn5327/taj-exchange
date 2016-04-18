@@ -8,9 +8,6 @@ def calc_taj(sec_symbol):
 	big_fish = top_orders(cur_security)
 	combined = .66*avg + .34*big_fish
 	sector_multiplier = 1/(sector_rec.risk_map[cur_security.sector] + .5)
-	print avg
-	print big_fish
-	print combined
 	ret_val = sector_multiplier * combined
 	if ret_val >1:
 		return 1
