@@ -11,17 +11,17 @@ def calc_taj(sec_symbol):
 	print avg
 	print big_fish
 	print combined
-	print sector_multiplier
-	print sector_multiplier * combined
 	ret_val = sector_multiplier * combined
 	if ret_val >1:
 		return 1
-	if ret_val <-1:
+	if ret_val < -1:
 		return -1
 	return ret_val
 
 def voting_avg(cur_security):
 	weight_avg = weighted_average(cur_security)
+	if weight_avg == 0:
+		return 0
 	return 10*((weight_avg - cur_security.fmv)/ cur_security.fmv)
 
 def weighted_average(cur_security):
