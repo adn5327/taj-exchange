@@ -26,4 +26,11 @@ class LoginAccountForm(forms.Form):
 class UpdateAccountForm(forms.Form):
     funds = forms.IntegerField(initial=0)
 
+class PosIntForm(forms.Form):
+    def __init__(self,*args,**kwargs):
+        max_ = kwargs.pop('max')
+        super(PosIntForm,self).__init__(*args,**kwargs)
+        self.fields['num'] = forms.ChoiceField(choices=((str(x), x) for x in range(1,max_)))
 
+    num = forms.ChoiceField(choices=((str(x), x) for x in range(1,10000)))
+    order_security = forms.ModelChoiceField(queryset=Security.objects.all())

@@ -19,4 +19,7 @@ urlpatterns = [
     url(r'^account/update/$', views.update_account, name='updateaccount'),
     url(r'^account/view/$', views.view_account, name='viewaccount'),
 
+    url(r'^account/view/t$', views.taj_it, name='tajit'),
+
+
 ]

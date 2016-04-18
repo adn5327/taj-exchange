@@ -3,8 +3,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from django.utils import timezone
 from django.core.urlresolvers import reverse
+
 from django.db.models import Avg
-from .forms import OrderForm, CreateAccountForm, UpdateAccountForm, LoginAccountForm
+from .forms import *
 
 from .models import Order, Security, Account, Possessions,Trade
 
@@ -179,11 +180,20 @@ def logout_page(request):
 	return closeAndRedirect('exchange:index')
 
 def taj_it(request):
-	if request.method== 'POST':
-		security = Security.objects.get(symbol=request.symbol)
+	if request.method == 'POST':
+		form = PosIntForm(request.POST, max=1)
+		form.is_valid()
+		f = form.cleaned_data
+		security = f['order_security']
+		if 'red' in request.POST:
+			taj_value = .25
+		elif 'yellow' in request.POST:
+			taj_value = .5
+		else:
+			taj_value = .75
 		taj_indicator = tajindicator.calc_taj(security)	
-		if abs(taj_indicator) > request.taj_value:
-			if taj_indicator <0:
+		if abs(taj_indicator) > taj_value:
+			if taj_indicator < 0:
 				bidask='ASK'
 			else:
 				bidask='BID'
@@ -216,6 +226,9 @@ def view_account(request):
 	account = Account.objects.get(user=request.user)
 	orders = Order.objects.filter(order_account=account)
 	possessions = Possessions.objects.filter(account_id=account)
+	pos_forms = {}
+	for pos in possessions:
+		pos_forms[pos.security_id.symbol] = {'form':PosIntForm(max=pos.available_amount, initial={'order_security':pos.security_id}),'pos':pos}
 
 	risk, total_shares = sector_rec.calculate_current_risk(account)
 	agr_low, agr_high = sector_rec.aggressive(risk, total_shares)
@@ -233,6 +246,7 @@ def view_account(request):
 		'mod_high':mod_high,
 		'safe_low':safe_low,
 		'safe_high':safe_high,
+		'pos_forms':pos_forms,
 	}
 
 	return closeAndRender(request, 'exchange/view_account.html',context) 
