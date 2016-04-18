@@ -5,8 +5,50 @@ from .models import Order, Security, Account, Trade, Possessions
 from django.shortcuts import render
 from django.db import connection
 from django.utils import timezone
+from django.contrib.auth.models import User
 
+def placeOrder(r_bidask, r_price, r_amount, r_user, r_order_security):
+	start_time = timezone.now()
+	account = Account.objects.get(user=r_user)
+	o = Order(start_time=start_time,
+		order_type="Limit",
+		bidask=r_bidask,
+		price=r_price,
+		amount=r_amount,
+		order_security=r_order_security,
+		order_account=account)
+	error=None
+	if o.amount < 1 or o.price < 1:
+		error = 'Price and amount must be greater than zero'
+		o = None
+	elif o.bidask == 'BID':
+		if o.price * o.amount <= account.available_funds:
+			o.save()
+			setInners(o.order_security)
+			account.available_funds -= o.price*o.amount
+			account.save()
 
+			orderSubmission(o) #Performs routine to attempt trades
+		else: 
+			error = 'Not enough funds in your account'
+			o = None
+	else:#When it is an ASK
+
+		acct_pos = Possessions.objects.filter(account_id=o.order_account,security_id=o.order_security)
+		if acct_pos and acct_pos[0].available_amount >= o.amount:
+			o.save()
+			setInners(o.order_security)
+			acct_pos[0].updateAvailable(-o.amount)
+			orderSubmission(o)
+		else:
+			error = 'You don\'t own that amount of that security'
+			o = None
+
+	context = {
+		'error':error,
+		'order':o,
+	}
+	return context
 def setInners(security):
 	ask_orders = Order.objects.filter(order_security=security,bidask='ASK').order_by('price')
 	bid_orders = Order.objects.filter(order_security=security,bidask='BID').order_by('-price')

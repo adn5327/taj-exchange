@@ -11,7 +11,7 @@ from .models import Order, Security, Account, Possessions,Trade
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
-from .func import orderSubmission, setInners, closeAndRender, closeAndRedirect
+from .func import orderSubmission, setInners, closeAndRender, closeAndRedirect, placeOrder
 from . import sector_rec, tajindicator
 
 def index(request):
@@ -24,46 +24,12 @@ def order(request):
 		form = OrderForm(request.POST)
 		if form.is_valid():
 			f = form.cleaned_data
-			start_time = timezone.now()
-			account = Account.objects.get(user=request.user)
-			o = Order(start_time=start_time,
-				order_type="Limit",
-				bidask=f['bidask'],
-				price=f['price'],
-				amount=f['amount'],
-				order_security=f['order_security'],
-				order_account=account)
-			error=None
-			if o.amount < 1 or o.price < 1:
-				error = 'Price and amount must be greater than zero'
-				o = None
-			elif o.bidask == 'BID':
-				if o.price * o.amount <= account.available_funds:
-					o.save()
-					setInners(o.order_security)
-					account.available_funds -= o.price*o.amount
-					account.save()
-
-					orderSubmission(o) #Performs routine to attempt trades
-				else: 
-					error = 'Not enough funds in your account'
-					o = None
-			else:#When it is an ASK
-
-				acct_pos = Possessions.objects.filter(account_id=o.order_account,security_id=o.order_security)
-				if acct_pos and acct_pos[0].available_amount >= o.amount:
-					o.save()
-					setInners(o.order_security)
-					acct_pos[0].updateAvailable(-o.amount)
-					orderSubmission(o)
-				else:
-					error = 'You don\'t own that amount of that security'
-					o = None
-
-			context = {
-				'error':error,
-				'order':o,
-			}
+			f_bidask = f['bidask']
+			f_price = f['price']
+			f_amount = f['amount']
+			f_user = request.user
+			f_order_security = f['order_security']
+			context = placeOrder(f_bidask, f_price, f_amount, f_user, f_order_security)
 		else:
 			error='Invalid form entry'
 			context = {
@@ -209,6 +175,18 @@ def logout_page(request):
 	logout(request)
 	return closeAndRedirect('exchange:index')
 
+def taj_it(request):
+	if request.method== 'POST':
+		security = Security.objects.get(symbol=request.symbol)
+		taj_indicator = tajindicator.calc_taj(security)	
+		if abs(taj_indicator) > request.taj_value:
+			if taj_indicator <0:
+				bidask='ASK'
+			else:
+				bidask='BID'
+			placeOrder(bidask,security.fmv, request.amount, request.user, security) 
+		return closeAndRedirect('exchange:viewaccount')
+
 def update_account(request):
 	if request.method == 'POST':
 		form = UpdateAccountForm(request.POST)
@@ -261,7 +239,7 @@ def view_security(request, symbol):
 	trades = Trade.objects.filter(security_id=security).order_by('-date_time')[:10]
 	bids = Order.objects.filter(order_security=security,bidask='BID').order_by('-price')
 	asks = Order.objects.filter(order_security=security,bidask='ASK').order_by('price')	
-	taj_indicator = tajindicator.calc_taj(symbol)	
+	taj_indicator = tajindicator.calc_taj(security)	
 	if request.user.is_authenticated():
 		account = Account.objects.get(user=request.user)
 		possessions = Possessions.objects.filter(account_id=account, security_id=security)
