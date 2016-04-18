@@ -1,6 +1,9 @@
 {% load staticfiles %}
 {% include "exchange/base.html" %}
 
+{% load chartit %}
+{{ tradeChrt|load_charts:"chart" }}
+
 <body>
     <div class="container-fluid">
 	    <div class="text-center">
@@ -79,6 +82,11 @@
                         {% endif %}
                     {% endfor %}
                 </div>
+              <div class="row">
+              	<div id="chart">
+              		
+              	</div>
+              </div>
             </div> 
 	    </div>
     </div>

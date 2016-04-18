@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from django.utils import timezone
 from django.core.urlresolvers import reverse
-
+from django.db.models import Avg
 from .forms import OrderForm, CreateAccountForm, UpdateAccountForm, LoginAccountForm
 
 from .models import Order, Security, Account, Possessions,Trade
@@ -13,6 +13,9 @@ from django.contrib.auth import authenticate, login, logout
 
 from .func import orderSubmission, setInners, closeAndRender, closeAndRedirect, placeOrder
 from . import sector_rec, tajindicator
+
+from chartit import PivotDataPool, PivotChart
+
 
 def index(request):
 
@@ -234,8 +237,31 @@ def view_account(request):
 
 	return closeAndRender(request, 'exchange/view_account.html',context) 
 
+def fmvChart(security):
+	tradeData = \
+		PivotDataPool(
+			series = 
+			[{'options':{ 
+				'source': Trade.objects.filter(security_id=security),
+				'categories': 'date_time'},
+				'terms': {
+				'fmv': Avg('price')}
+				}])			
+	
+	tradeChart = \
+		PivotChart(
+			datasource = tradeData,
+			series_options = [
+			{'options':{
+			'type':'line'},
+			'terms':['fmv']}],
+			chart_options={})
+	return tradeChart
+
 def view_security(request, symbol):
 	security = Security.objects.get(symbol=symbol)
+	tradeChart = fmvChart(security)
+
 	trades = Trade.objects.filter(security_id=security).order_by('-date_time')[:10]
 	bids = Order.objects.filter(order_security=security,bidask='BID').order_by('-price')
 	asks = Order.objects.filter(order_security=security,bidask='ASK').order_by('price')	
@@ -256,6 +282,7 @@ def view_security(request, symbol):
 			'bidform':bidform,
 			'askform':askform,
 			'tajindicator':taj_indicator,
+			'tradeChrt': tradeChart,
 		}
 	else:
 		context = {
@@ -264,6 +291,7 @@ def view_security(request, symbol):
 			'bids':bids,
 			'asks':asks,
 			'user':request.user,
+			'tradeChrt': tradeChart,
 		}
 
 	return closeAndRender(request, 'exchange/view_security.html', context)
