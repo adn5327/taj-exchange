@@ -1,4 +1,5 @@
 import sector_rec
+from django.db.models import Sum
 from .models import *
 
 def calc_taj(sec_symbol):
@@ -6,11 +7,21 @@ def calc_taj(sec_symbol):
 	avg = voting_avg(cur_security)
 	big_fish = top_orders(cur_security)
 	combined = .66*avg + .34*big_fish
-	sector_mutliplier = 1/(sector_rec.risk_map[cur_security.sector] + .5)
-	return sector_multiplier * combined
+	sector_multiplier = 1/(sector_rec.risk_map[cur_security.sector] + .5)
+	print avg
+	print big_fish
+	print combined
+	ret_val = sector_multiplier * combined
+	if ret_val >1:
+		return 1
+	if ret_val < -1:
+		return -1
+	return ret_val
 
 def voting_avg(cur_security):
 	weight_avg = weighted_average(cur_security)
+	if weight_avg == 0:
+		return 0
 	return 10*((weight_avg - cur_security.fmv)/ cur_security.fmv)
 
 def weighted_average(cur_security):
@@ -35,7 +46,7 @@ def top_orders(cur_security):
 	top_sum = top.aggregate(total_sum=Sum('amount'))
 	ret = 0.0
 	for each_top in top:
-		weight = each_top.amount/top_sum['total_sum']
+		weight = (1.0*each_top.amount)/top_sum['total_sum']
 		if each_top.bidask == "BID":
 			ret += weight
 		else:

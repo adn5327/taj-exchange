@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from .func import orderSubmission, setInners, closeAndRender, closeAndRedirect
-from . import sector_rec
+from . import sector_rec, tajindicator
 
 def index(request):
 
@@ -261,6 +261,7 @@ def view_security(request, symbol):
 	trades = Trade.objects.filter(security_id=security).order_by('-date_time')[:10]
 	bids = Order.objects.filter(order_security=security,bidask='BID').order_by('-price')
 	asks = Order.objects.filter(order_security=security,bidask='ASK').order_by('price')	
+	taj_indicator = tajindicator.calc_taj(symbol)	
 	if request.user.is_authenticated():
 		account = Account.objects.get(user=request.user)
 		possessions = Possessions.objects.filter(account_id=account, security_id=security)
@@ -276,6 +277,7 @@ def view_security(request, symbol):
 			'user':request.user,
 			'bidform':bidform,
 			'askform':askform,
+			'tajindicator':taj_indicator,
 		}
 	else:
 		context = {
