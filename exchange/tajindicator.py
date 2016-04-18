@@ -15,7 +15,7 @@ def weighted_average(cur_security):
 		avg += each_bid.price*each_bid.amount
 	for each_ask in asks:
 		avg += each_ask.price*each_ask.amount
-	return avg/ total_amount
+	return float(avg)/ float(total_amount)
 
 def top_orders(cur_security):
 	top = Order.objects.filter(order_security=cur_security).order_by('-amount')[:3]
