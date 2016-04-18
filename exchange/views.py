@@ -40,19 +40,47 @@ def order(request):
 				'error':error,
 				'order':None
 			}
-
-		return closeAndRender(request, "exchange/order_submit.html", context)
+		if not context['error']:
+			context['error'] = 'Order successfully submitted'
+		request.session['error'] = context['error']
+		return redirect('exchange:order')
 
 	else:
+		request.session.pop('error',None)
 		form = OrderForm()
 		context = {
 			'form':form,
-			'user':request.user
+			'user':request.user,
 		}
 		return closeAndRender(request, 'exchange/order.html', context)
 
+def order_security(request, symbol):
+	if request.method == 'POST':
+		form = OrderForm(request.POST)
+		if form.is_valid():
+			f = form.cleaned_data
+			f_bidask = f['bidask']
+			f_price = f['price']
+			f_amount = f['amount']
+			f_user = request.user
+			f_order_security = f['order_security']
+			context = placeOrder(f_bidask, f_price, f_amount, f_user, f_order_security)
+		else:
+			error='Invalid form entry'
+			context = {
+				'error':error,
+				'order':None
+			}
+		if context['error']:
+			request.session['error'] = context['error']
+		else:
+			request.session['error'] = 'Order successfully placed'
+
+	return redirect('exchange:viewsecurity',symbol=symbol)
+
 
 def order_book(request):
+    error = request.session.pop('error',None)
     book = {}
     if request.method == 'POST':
         sectorpost = request.POST['sector']
@@ -61,9 +89,13 @@ def order_book(request):
         elif sectorpost == 'yours':
             account = Account.objects.get(user=request.user)
             pos = Possessions.objects.filter(account_id=account)
+            orders = Order.objects.filter(order_account=account)
             secs = []
             for p in pos:
                 secs.append(p.security_id.symbol)
+            for o in orders:
+            	if o.order_security.symbol not in secs:
+            		secs.append(o.order_security.symbol)
             securities = Security.objects.filter(symbol__in=secs) 
         else:
             securities = Security.objects.filter(sector=sectorpost)
@@ -75,7 +107,8 @@ def order_book(request):
 		book[sec.symbol] = {'bids':bids,'asks':asks, 'sector':sec.sector, 'fmv':sec.fmv}
     context={
 		'book':book,
-		'user':request.user
+		'user':request.user,
+		'error':error,
 	}
     return closeAndRender(request, 'exchange/orderbook.html',context)
 
@@ -94,7 +127,7 @@ def delete_order(request):
 			else:
 				pos = Possessions.objects.filter(account_id=order.order_account, security_id=order.order_security)[0]
 				pos.updateAvailable(order.amount)
-
+		request.session['error'] = 'Order(s) deleted'
 		return closeAndRedirect('exchange:index')
 	else:
 		account = Account.objects.get(user=request.user)
@@ -185,6 +218,7 @@ def taj_it(request):
 		form.is_valid()
 		f = form.cleaned_data
 		security = f['order_security']
+		num = int(request.POST.get('num'))
 		if 'red' in request.POST:
 			taj_value = .25
 		elif 'yellow' in request.POST:
@@ -197,8 +231,12 @@ def taj_it(request):
 				bidask='ASK'
 			else:
 				bidask='BID'
-			placeOrder(bidask,security.fmv, request.amount, request.user, security) 
-		return closeAndRedirect('exchange:viewaccount')
+			context = placeOrder(bidask, security.fmv, num, request.user, security)
+			error = "Order placed" 
+		else:
+			error = "Order not viable"
+		request.session['error'] = error
+		return redirect('exchange:viewaccount')
 
 def update_account(request):
 	if request.method == 'POST':
@@ -223,6 +261,7 @@ def update_account(request):
 
 
 def view_account(request):
+	error = request.session.pop('error',None)
 	account = Account.objects.get(user=request.user)
 	orders = Order.objects.filter(order_account=account)
 	possessions = Possessions.objects.filter(account_id=account)
@@ -247,6 +286,7 @@ def view_account(request):
 		'safe_low':safe_low,
 		'safe_high':safe_high,
 		'pos_forms':pos_forms,
+		'error':error,
 	}
 
 	return closeAndRender(request, 'exchange/view_account.html',context) 
@@ -273,6 +313,8 @@ def fmvChart(security):
 	return tradeChart
 
 def view_security(request, symbol):
+	error = request.session.pop('error',None)
+
 	security = Security.objects.get(symbol=symbol)
 	tradeChart = fmvChart(security)
 
@@ -297,6 +339,7 @@ def view_security(request, symbol):
 			'askform':askform,
 			'tajindicator':taj_indicator,
 			'tradeChrt': tradeChart,
+			'error':error,
 		}
 	else:
 		context = {
@@ -306,6 +349,7 @@ def view_security(request, symbol):
 			'asks':asks,
 			'user':request.user,
 			'tradeChrt': tradeChart,
+			'error':error,
 		}
 
 	return closeAndRender(request, 'exchange/view_security.html', context)

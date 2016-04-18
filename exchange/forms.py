@@ -5,7 +5,7 @@ from .models import Security,Order,Account
 
 class OrderForm(forms.Form):
 	bidask = forms.ChoiceField(choices=(('BID', 'BID'),('ASK', 'ASK')))
-	price = forms.IntegerField(initial=0)
+	price = forms.FloatField(initial=0)
 	amount = forms.IntegerField(initial=0)
 	order_security = forms.ModelChoiceField(queryset=Security.objects.all())
 
@@ -30,7 +30,7 @@ class PosIntForm(forms.Form):
     def __init__(self,*args,**kwargs):
         max_ = kwargs.pop('max')
         super(PosIntForm,self).__init__(*args,**kwargs)
-        self.fields['num'] = forms.ChoiceField(choices=((str(x), x) for x in range(1,max_)))
+        self.fields['num'] = forms.ChoiceField(choices=((str(x), x) for x in range(1,max_+1)))
 
     num = forms.ChoiceField(choices=((str(x), x) for x in range(1,10000)))
     order_security = forms.ModelChoiceField(queryset=Security.objects.all())

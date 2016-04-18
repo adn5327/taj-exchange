@@ -17,9 +17,9 @@
 	    	{% if user.is_authenticated %}
 	    	<div class="row">
 		   		<div class="col-md-4" id="bidform">
-			        <form action="/order/submit/" method="post">
+			        <form action="/orderbook/{{security.symbol}}/sub" method="post">
 			        {% csrf_token %}
-			        <h2>Bid</h2>
+			        <h2 class="ticker">Bid</h2>
 		            <p>Price {{bidform.price}}</p>
 		            <p>Amount {{bidform.amount}}</p>
 		            <p style="display:none">{{bidform.bidask}}</p>
@@ -28,7 +28,7 @@
 	        		</form>
 		        </div>
 		        <div class="col-md-4">
-			    	<h2>Last 10 Trades</h2>
+			    	<h2 class="ticker">Last 10 Trades</h2>
 			    	{% if trades %}
 			    	{% for trade in trades %}
 			    	<p>{{trade.date_time}} Price: {{trade.price}}</p>
@@ -37,9 +37,9 @@
 			    	<br>
 		    	</div>
 		   		<div class="col-md-4" id="askform">
-			        <form action="/order/submit/" method="post">
+			        <form action="/orderbook/{{security.symbol}}/sub" method="post">
 			        {% csrf_token %}
-			        <h2>Ask</h2>
+			        <h2 class="ticker">Ask</h2>
 			        {% if possessions %}
 			        {% for pos in possessions %}
 		            <p>You have {{pos.available_amount}} shares available out of a total of {{pos.total_amount}} shares</p>
@@ -91,3 +91,6 @@
 	    </div>
     </div>
 </body>
+{% if error %}
+<script type="text/javascript">alert("{{error}}");</script>
+{% endif %}

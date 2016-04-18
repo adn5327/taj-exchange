@@ -48,6 +48,12 @@ class Possessions(models.Model):
 			+ str(self.available_amount) + ' Total shares = ' \
 			+ str(self.total_amount) + ' shares'
 
+	def print_shares_avail(self):
+		return 'Available Shares: ' + str(self.available_amount) + ' shares'
+	
+	def print_shares_tot(self):
+		return 'Total Shares: ' + str(self.total_amount) + ' shares'
+
 
 class Trade(models.Model):
 	trade_id = models.AutoField(primary_key=True)
