@@ -34,3 +34,6 @@ class PosIntForm(forms.Form):
 
     num = forms.ChoiceField(choices=((str(x), x) for x in range(1,10000)))
     order_security = forms.ModelChoiceField(queryset=Security.objects.all())
+
+class SearchForm(forms.Form):
+	symbol = forms.CharField(required=True, help_text='Search for a symbol')

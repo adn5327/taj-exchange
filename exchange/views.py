@@ -94,20 +94,24 @@ def order_book(request):
             for p in pos:
                 secs.append(p.security_id.symbol)
             for o in orders:
-            	if o.order_security.symbol not in secs:
-            		secs.append(o.order_security.symbol)
-            securities = Security.objects.filter(symbol__in=secs) 
+                if o.order_security.symbol not in secs:
+                    secs.append(o.order_security.symbol)
+            securities = Security.objects.filter(symbol__in=secs)
+        elif sectorpost == 'search':
+            securities = Security.objects.filter(symbol__istartswith=str(request.POST.get("symbol")))
         else:
             securities = Security.objects.filter(sector=sectorpost)
     else: 
-	    securities = Security.objects.all().order_by('-fmv')[:10]
+        securities = Security.objects.all().order_by('-fmv')[:10]
     for sec in securities:
-		bids = Order.objects.filter(order_security=sec,bidask='BID').order_by('-price')
-		asks = Order.objects.filter(order_security=sec,bidask='ASK').order_by('price')
-		book[sec.symbol] = {'bids':bids,'asks':asks, 'sector':sec.sector, 'fmv':sec.fmv}
+        bids = Order.objects.filter(order_security=sec,bidask='BID').order_by('-price')
+        asks = Order.objects.filter(order_security=sec,bidask='ASK').order_by('price')
+        book[sec.symbol] = {'bids':bids,'asks':asks, 'sector':sec.sector, 'fmv':sec.fmv} 
+    search = SearchForm()
     context={
 		'book':book,
 		'user':request.user,
+		'search':search,
 		'error':error,
 	}
     return closeAndRender(request, 'exchange/orderbook.html',context)

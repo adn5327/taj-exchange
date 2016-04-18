@@ -6,6 +6,8 @@
     <div class="row sectors">
     <form action="{% url 'exchange:orderbookall' %}" method="post">
     {% csrf_token %}
+        <button class="btn btn-primary" type="submit" name="sector" value="search">Search</button>  
+        <span name="symbol">{{search.symbol}}</span> 
         <button class="btn btn-primary" type="submit" name="sector" value="all">All</button>  
         {% if user.is_authenticated %}
         <button class="btn btn-primary" type="submit" name="sector" value="yours">Yours</button>  
@@ -19,7 +21,7 @@
         <button class="btn btn-primary" type="submit" name="sector" value="Industrials">Industrials</button>  
         <button class="btn btn-primary" type="submit" name="sector" value="NonCyclical Goods">NonCyclical Goods</button>  
         <button class="btn btn-primary" type="submit" name="sector" value="Financials">Financials</button>  
-        <button class="btn btn-primary" type="submit" name="sector" value="Healthcare">Healthcare</button>  
+        <button class="btn btn-primary" type="submit" name="sector" value="Healthcare">Healthcare</button> 
     </form>
     </div>
     {% if book %}
