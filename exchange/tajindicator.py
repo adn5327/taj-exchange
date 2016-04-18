@@ -1,4 +1,4 @@
-import sector_rec.py
+import sector_rec
 from .models import *
 
 def calc_taj(sec_symbol):
