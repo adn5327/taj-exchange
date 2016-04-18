@@ -80,11 +80,11 @@ def recommend(risk, total_shares, strategy):
                         cur_list = [sec_list[i], sec_list[j], sec_list[k]]
                         prev_sector_low, prev_sector_high = getDeltaUpdate(risk, cur_list, prev_sector_low, prev_sector_high)
 
-    print "------------"
-    print prev_sector_low
-    print prev_sector_high
-    print "------------"
-    return prev_sector_low, prev_sector_high
+    # print "------------"
+    # print prev_sector_low
+    # print prev_sector_high
+    # print "------------"
+    return wrapper(prev_sector_low, total_shares), wrapper(prev_sector_high,total_shares)
                 
 def wrapper(prev_sector_low, total_shares=1000):
 	low_list = prev_sector_low[0]
