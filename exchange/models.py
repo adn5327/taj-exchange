@@ -81,7 +81,7 @@ class Order(models.Model):
 
 
 	def __str__(self):
-		return str(self.id)+': '+self.bidask+' on ' + str(self.order_security) +' : '+str(self.amount)+' at '+str(self.price)
+		return str(self.id)+': '+self.bidask+' on ' + str(self.order_security) +' : '+str(self.amount)+' at $'+str(self.price)
 
 class Account(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)

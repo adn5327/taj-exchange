@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from .func import orderSubmission, setInners, closeAndRender, closeAndRedirect
-from . import sector_rec
+from . import sector_rec, tajindicator
 
 def index(request):
 
