@@ -56,7 +56,7 @@ class Trade(models.Model):
 	security_id = models.ForeignKey('Security', related_name="trade_security_id", on_delete=models.DO_NOTHING)
 	price = models.IntegerField(default=0)
 	amount = models.IntegerField(default=0)
-	date_time = models.DateTimeField(default=timezone.now())
+	date_time = models.DateTimeField()
 
 
 	def __str__(self):
