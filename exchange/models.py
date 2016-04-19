@@ -11,9 +11,9 @@ class Security(models.Model):
 	sector = models.CharField(default='Unknown',max_length=25)
 	name = models.CharField(default='NameGoesHere',max_length=25)
 	volume = models.IntegerField(default=0)
-	inner_bid = models.IntegerField(default=0)
-	inner_ask = models.IntegerField(default=0)
-	fmv = models.IntegerField(default=0)
+	inner_bid = models.FloatField(default=0)
+	inner_ask = models.FloatField(default=0)
+	fmv = models.FloatField(default=0)
 	
 	def updateFMV(self, new_fmv):
 		self.fmv = new_fmv
@@ -48,13 +48,19 @@ class Possessions(models.Model):
 			+ str(self.available_amount) + ' Total shares = ' \
 			+ str(self.total_amount) + ' shares'
 
+	def print_shares_avail(self):
+		return 'Available Shares: ' + str(self.available_amount) + ' shares'
+	
+	def print_shares_tot(self):
+		return 'Total Shares: ' + str(self.total_amount) + ' shares'
+
 
 class Trade(models.Model):
 	trade_id = models.AutoField(primary_key=True)
 	bid_account = models.ForeignKey('Account', related_name="bid_account", on_delete=models.DO_NOTHING)
 	ask_account = models.ForeignKey('Account', related_name="ask_account", on_delete=models.DO_NOTHING)
 	security_id = models.ForeignKey('Security', related_name="trade_security_id", on_delete=models.DO_NOTHING)
-	price = models.IntegerField(default=0)
+	price = models.FloatField(default=0)
 	amount = models.IntegerField(default=0)
 	date_time = models.DateTimeField()
 
@@ -66,7 +72,7 @@ class Order(models.Model):
 	start_time = models.DateTimeField('date started')
 	order_type = models.CharField(max_length=20,choices=(('Limit','Limit'),))
 	bidask = models.CharField(max_length=3,choices=(('BID', 'BID'),('ASK', 'ASK')))
-	price = models.IntegerField(default=0)
+	price = models.FloatField(default=0)
 	amount = models.IntegerField(default=0)
 	order_security = models.ForeignKey('Security', on_delete=models.CASCADE)
 	order_account = models.ForeignKey('Account', on_delete=models.CASCADE)
@@ -85,8 +91,8 @@ class Order(models.Model):
 
 class Account(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	total_funds = models.IntegerField(default=0)
-	available_funds = models.IntegerField(default=0)
+	total_funds = models.FloatField(default=0)
+	available_funds = models.FloatField(default=0)
 	SSN = models.IntegerField(default=0)
 
 	def updateTotal(self, change_in_funds):

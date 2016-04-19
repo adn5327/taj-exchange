@@ -2,8 +2,8 @@ import sector_rec
 from django.db.models import Sum
 from .models import *
 
-def calc_taj(sec_symbol):
-	cur_security = Security.objects.get(symbol=sec_symbol)
+def calc_taj(cur_security):
+	#cur_security = Security.objects.get(symbol=sec_symbol)
 	avg = voting_avg(cur_security)
 	big_fish = top_orders(cur_security)
 	combined = .66*avg + .34*big_fish

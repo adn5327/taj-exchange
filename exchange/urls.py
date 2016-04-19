@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^order/submit/$', views.order, name='submit'),
     url(r'^orderbook/all/$', views.order_book, name='orderbookall'),
     url(r'^orderbook/(?P<symbol>[-\w]+)/$', views.view_security, name='viewsecurity'),
+    url(r'^orderbook/(?P<symbol>[-\w]+)/sub$', views.order_security, name='ordersecurity'),
     url(r'^deleteorder/$', views.delete_order, name='deleteorder'),
 
     url(r'^account/create/', views.create_account, name='createaccount'),
@@ -18,5 +19,8 @@ urlpatterns = [
 
     url(r'^account/update/$', views.update_account, name='updateaccount'),
     url(r'^account/view/$', views.view_account, name='viewaccount'),
+
+    url(r'^account/view/t$', views.taj_it, name='tajit'),
+
 
 ]

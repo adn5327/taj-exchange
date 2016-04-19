@@ -1,5 +1,7 @@
 dj-database-url==0.4.1
 Django==1.9.4
+django-chartit2==0.2.2
 gunicorn==19.4.5
 mysqlclient==1.3.7
+simplejson==3.8.2
 whitenoise==3.0

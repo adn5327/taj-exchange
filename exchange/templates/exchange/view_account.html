@@ -24,9 +24,25 @@
 	    <div class="row left-padded">
 			<h2>YOUR SECURITIES</h2>
 			{% if possessions %}
-			{% for poss in possessions %}
-			<p>{{poss}}</p>
-			{% endfor %}
+			{% for key,value in pos_forms.items %}  
+            <div>
+                <form action="/account/view/t" method="post">
+                {% csrf_token %}
+                <h3><a href="{%url 'exchange:viewsecurity' symbol=value.pos.security_id.symbol %}">{{value.pos.security_id.symbol}}</a></h3>
+                <p>{{value.pos.print_shares_avail}}</p>
+                <p>{{value.pos.print_shares_tot}}</p>
+                {% if value.pos.available_amount > 0 %}
+                <p name="num">{{value.form.num}}</p>
+                <p style="display: none">{{value.form.order_security}}</p>
+                <button class="btn btn-primary" style="background:red" name="red" />Taj-it (Risky)</button>
+                <button class="btn btn-primary" style="background:orange" name="yellow" />Taj-it (Medium)</button>
+                <button class="btn btn-primary" style="background:green" name="green" />Taj-it (Safe)</button>
+                {% endif %}
+                </p>
+                </form>
+                
+			</div>
+            {% endfor %}
 		</div>
 	    <div class="row left-padded">
 	    	<h2>YOUR RECOMMENDATIONS -- Current Risk: {{risk}}</h3>
@@ -92,3 +108,6 @@
 	</div>    	
 	{% endif %}
 </body>
+{% if error %}
+<script type="text/javascript">alert("{{error}}");</script>
+{% endif %}
