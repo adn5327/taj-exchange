@@ -132,7 +132,7 @@ def delete_order(request):
 				pos = Possessions.objects.filter(account_id=order.order_account, security_id=order.order_security)[0]
 				pos.updateAvailable(order.amount)
 		request.session['error'] = 'Order(s) deleted'
-		return closeAndRedirect('exchange:index')
+		return closeAndRedirect('exchange:viewaccount')
 	else:
 		account = Account.objects.get(user=request.user)
 		orders = Order.objects.filter(order_account=account)
@@ -253,8 +253,15 @@ def update_account(request):
 			if cur_funds_avail + f['funds'] >=0:
 				cur_account.total_funds = cur_funds_tot + f['funds']
 				cur_account.available_funds = cur_funds_avail + f['funds']
-				cur_account.save()                
-		return closeAndRedirect('exchange:index')
+				cur_account.save()     
+				if f['funds'] > 0:
+					error = '$'+str(f['funds']) + ' deposited'
+				else:
+					error = '$'+str(f['funds'])[1:len(str(f['funds']))] + ' withdrawn'
+			else:
+				error = 'You do not have that much money'
+			request.session['error'] = error           
+		return closeAndRedirect('exchange:viewaccount')
 	else:
 		form = UpdateAccountForm()
 		context={
@@ -273,6 +280,7 @@ def view_account(request):
 	for pos in possessions:
 		pos_forms[pos.security_id.symbol] = {'form':PosIntForm(max=pos.available_amount, initial={'order_security':pos.security_id}),'pos':pos}
 
+	depwit_form = UpdateAccountForm()
 	risk, total_shares = sector_rec.calculate_current_risk(account)
 	agr_low, agr_high = sector_rec.aggressive(risk, total_shares)
 	mod_low, mod_high = sector_rec.moderate(risk, total_shares)
@@ -290,6 +298,7 @@ def view_account(request):
 		'safe_low':safe_low,
 		'safe_high':safe_high,
 		'pos_forms':pos_forms,
+		'depwit_form':depwit_form,
 		'error':error,
 	}
 

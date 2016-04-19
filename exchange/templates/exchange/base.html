@@ -18,8 +18,6 @@
             <li><a href="{% url 'exchange:orderbookall' %}">Full orderbook</a></li>
             {% if user.is_authenticated %}
             <li><a href="{% url 'exchange:order' %}">Submit an order</a></li>
-            <li><a href="{% url 'exchange:deleteorder' %}">Delete an order</a></li>
-            <li><a href="{% url 'exchange:updateaccount' %}">Deposit/Withdraw</a></li>
             <li><a href="{% url 'exchange:viewaccount' %}">View account</a></li>
             {% if user.is_staff %}
             <li><a href="{% url 'admin:index' %}">Admin</a></li>
