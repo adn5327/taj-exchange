@@ -8,6 +8,8 @@
     {% csrf_token %}
         <button class="btn btn-primary" type="submit" name="sector" value="search">Search</button>  
         <span name="symbol">{{search.symbol}}</span> 
+    </div>
+    <div class="row sectors">
         <button class="btn btn-primary" type="submit" name="sector" value="all">All</button>  
         {% if user.is_authenticated %}
         <button class="btn btn-primary" type="submit" name="sector" value="yours">Yours</button>  

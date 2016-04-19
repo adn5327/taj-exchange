@@ -8,14 +8,23 @@
 	    	<h2>YOUR FUNDS</h2>
 	    	<p>{{account.print_funds_avail}}</p>
 	    	<p>{{account.print_funds_tot}}</p>
+            <form action="/account/update/" method="post">
+            {% csrf_token %}
+            {{depwit_form.as_p}}
+            <button class="btn btn-primary" value="Submit"/>Deposit/Withdraw</button>    
+    </form>
 	    	<br>
 	    </div>
 	    <div class="row left-padded">
 	    	<h2>YOUR ORDERS</h2>
 	    	{% if orders %}
-	    	{% for order in orders %}
-	    	<p>{{order}}</p>
-	    	{% endfor %}
+	    	<form action="/deleteorder/" method="POST">
+            {% csrf_token %}
+            {% for order in orders %}
+            <input type="checkbox" name="order" value="{{order.id}}"/>{{order}}<br>
+            {% endfor %}
+            <button class="btn btn-primary" style="background:red" value="Delete Order"/>Delete Order(s)</button>
+            </form>
 	    	{% else %}
 	    	<p>You have no orders</p>
 	    	{% endif %}
@@ -24,25 +33,34 @@
 	    <div class="row left-padded">
 			<h2>YOUR SECURITIES</h2>
 			{% if possessions %}
+            <table border="1">
+            <tr>
+                <th>Symbol</th>
+                <th>Available Shares</th>
+                <th>Total Shares</th>
+                <th>Taj-it Amount</th>
+                <th>Taj-it?</th>
+            </tr>
 			{% for key,value in pos_forms.items %}  
-            <div>
+            <tr>
                 <form action="/account/view/t" method="post">
                 {% csrf_token %}
-                <h3><a href="{%url 'exchange:viewsecurity' symbol=value.pos.security_id.symbol %}">{{value.pos.security_id.symbol}}</a></h3>
-                <p>{{value.pos.print_shares_avail}}</p>
-                <p>{{value.pos.print_shares_tot}}</p>
+                <td><a href="{%url 'exchange:viewsecurity' symbol=value.pos.security_id.symbol %}">{{value.pos.security_id.symbol}}</a></td>
+                <td>{{value.pos.available_amount}}</td>
+                <td>{{value.pos.total_amount}}</td>
                 {% if value.pos.available_amount > 0 %}
-                <p name="num">{{value.form.num}}</p>
-                <p style="display: none">{{value.form.order_security}}</p>
-                <button class="btn btn-primary" style="background:red" name="red" />Taj-it (Risky)</button>
-                <button class="btn btn-primary" style="background:orange" name="yellow" />Taj-it (Medium)</button>
-                <button class="btn btn-primary" style="background:green" name="green" />Taj-it (Safe)</button>
+                <td name="num">{{value.form.num}}</td>
+                <td style="display: none">{{value.form.order_security}}</td>
+                <td>
+                <button class="btn btn-primary" style="background:red" name="red" />Risky</button>
+                <button class="btn btn-primary" style="background:orange" name="yellow" />Medium</button>
+                <button class="btn btn-primary" style="background:green" name="green" />Safe</button>
+                </td>
                 {% endif %}
-                </p>
                 </form>
-                
-			</div>
-            {% endfor %}
+            </tr> 
+            {% endfor %} 
+        </table>
 		</div>
 	    <div class="row left-padded">
 	    	<h2>YOUR RECOMMENDATIONS -- Current Risk: {{risk}}</h3>
