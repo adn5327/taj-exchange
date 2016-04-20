@@ -3,7 +3,8 @@ from django.db.models import Sum
 from .models import *
 
 def calc_taj(cur_security):
-	#cur_security = Security.objects.get(symbol=sec_symbol)
+	if cur_security.fmv == 0:
+		return 0
 	avg = voting_avg(cur_security)
 	big_fish = top_orders(cur_security)
 	combined = .66*avg + .34*big_fish
@@ -16,12 +17,16 @@ def calc_taj(cur_security):
 	return ret_val
 
 def voting_avg(cur_security):
+	if cur_security.fmv == 0:
+		return 0
 	weight_avg = weighted_average(cur_security)
 	if weight_avg == 0:
 		return 0
 	return 10*((weight_avg - cur_security.fmv)/ cur_security.fmv)
 
 def weighted_average(cur_security):
+	if cur_security.fmv == 0:
+		return 0
 	bids = Order.objects.filter(order_security=cur_security,bidask='BID').order_by('-price')[:5]
 	asks = Order.objects.filter(order_security=cur_security,bidask='ASK').order_by('price')[:5]
 	if len(bids) <5 or len(asks) <5:
