@@ -237,7 +237,10 @@ def taj_it(request):
 			else:
 				bidask='BID'
 			context = placeOrder(bidask, security.fmv, num, request.user, security)
-			error = "Order placed" 
+			if context['order']:
+				error = "Order placed" 
+			else:
+				error = context['error']
 		else:
 			error = "Order not viable"
 		request.session['error'] = error
@@ -282,26 +285,37 @@ def view_account(request):
 		pos_forms[pos.security_id.symbol] = {'form':PosIntForm(max=pos.available_amount, initial={'order_security':pos.security_id}),'pos':pos}
 
 	depwit_form = UpdateAccountForm()
-	risk, total_shares = sector_rec.calculate_current_risk(account)
-	agr_low, agr_high = sector_rec.aggressive(risk, total_shares)
-	mod_low, mod_high = sector_rec.moderate(risk, total_shares)
-	safe_low, safe_high = sector_rec.safe(risk, total_shares)
-	context = {
-		'account':account,
-		'orders':orders,
-		'possessions':possessions,
-		'user':request.user,
-		'risk':risk,
-		'agr_low':agr_low,
-		'agr_high':agr_high,
-		'mod_low':mod_low,
-		'mod_high':mod_high,
-		'safe_low':safe_low,
-		'safe_high':safe_high,
-		'pos_forms':pos_forms,
-		'depwit_form':depwit_form,
-		'error':error,
-	}
+	if len(possessions):
+		risk, total_shares = sector_rec.calculate_current_risk(account)
+		agr_low, agr_high = sector_rec.aggressive(risk, total_shares)
+		mod_low, mod_high = sector_rec.moderate(risk, total_shares)
+		safe_low, safe_high = sector_rec.safe(risk, total_shares)
+		context = {
+			'account':account,
+			'orders':orders,
+			'possessions':possessions,
+			'user':request.user,
+			'risk':risk,
+			'agr_low':agr_low,
+			'agr_high':agr_high,
+			'mod_low':mod_low,
+			'mod_high':mod_high,
+			'safe_low':safe_low,
+			'safe_high':safe_high,
+			'pos_forms':pos_forms,
+			'depwit_form':depwit_form,
+			'error':error,
+		}
+	else:
+		context = {
+			'account':account,
+			'orders':orders,
+			'possessions':possessions,
+			'user':request.user,
+			'pos_forms':pos_forms,
+			'depwit_form':depwit_form,
+			'error':error,
+		}
 
 	return closeAndRender(request, 'exchange/view_account.html',context) 
 
