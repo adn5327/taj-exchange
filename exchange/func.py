@@ -108,6 +108,10 @@ def performTrade(order, potential_order, aggressor):
 		date_time = date_time,
 		)
 
+	# bid.order_security.updateFMV(trade_price)
+	order.order_security.updateFMV(trade_price)
+	
+	# ask.order_security.updateFMV(trade_price)
 	ask.update(trade_amount)
 	bid.update(trade_amount)
 	updatePosession(bid.order_account, bid.order_security, trade_amount, 'BID') #Bid account possession increases
@@ -116,7 +120,7 @@ def performTrade(order, potential_order, aggressor):
 	total_price = trade_amount * trade_price
 	bid.order_account.updateTotal(-total_price)
 	ask.order_account.updateBoth(total_price, total_price)
-	bid.order_security.updateFMV(trade_price)
+	
 
 	trade.save()
 

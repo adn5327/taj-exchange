@@ -65,6 +65,7 @@ def order_security(request, symbol):
 			f_user = request.user
 			f_order_security = f['order_security']
 			context = placeOrder(f_bidask, f_price, f_amount, f_user, f_order_security)
+			
 		else:
 			error='Invalid form entry'
 			context = {
@@ -364,5 +365,5 @@ def view_security(request, symbol):
 			'tradeChrt': tradeChart,
 			'error':error,
 		}
-
+	
 	return closeAndRender(request, 'exchange/view_security.html', context)
